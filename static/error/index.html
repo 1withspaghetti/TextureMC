@@ -1,0 +1,40 @@
+<html>
+<head>
+  <title>TextureMC</title>
+  <meta name="description" content="TextureMC is a free minecraft texture pack editor, create your own texture pack in seconds!">
+  <link rel="icon" type="image/png" href="/images/icon.png">
+  <meta content="TextureMC" property="og:title">
+  <meta content="TextureMC is a free minecraft texture pack editor, create your own texture pack in seconds!" property="og:description">
+  <meta content="TextureMC" property="og:site_name">
+  <meta content='/images/editor.png' property='og:image'>
+  <script type="text/javascript" src="/js/login.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,800;0,900;1,100;1,200;1,300;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="topnav">
+    <a class="logo" href="/">TextureMC<span class="beta">BETA</span></a>
+    <a href="/about" style="float: left;">About</a>
+    <a href="/login" class="right" th:unless="${hasSession}">Log In</a>
+    <a href="/signup" class="right" th:unless="${hasSession}">Sign Up</a>
+    <a href="/account" class="right" th:if="${hasSession}">Account</a>
+  </div>
+  <div class="content">
+    <div class="panel">
+      <div class="panel-text">
+        <h2>Error <span th:text="${status}"></span> - <span th:text="${error}"></span></h2>
+        <span>If you believe this is an error, please 
+          contact <a href="mailto:bugs@texturemc.com">bugs@texturemc.com</a>.</span><br>
+        <a href="/"><button class="button-primary">Return Home</button></a>
+      </div>
+    </div>
+    <div class="panel">
+        <div class="panel-text beta-notice">
+          <span><b>Please note:</b> This website is in <i>BETA</i>, <a href="/about">Click Here</a> to see more!</span>
+        </div>
+      </div>
+  </div>
+</body>
+</html>

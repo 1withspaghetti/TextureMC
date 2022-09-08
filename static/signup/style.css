@@ -1,0 +1,89 @@
+body {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+}
+
+.main {
+    background-color: var(--item-bg-color);
+    border: 5px solid var(--main-outline-color);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15px;
+    margin-top: 100px;
+    max-width: 50%;
+    color: var(--main-text-color);
+    align-self: center;
+}
+
+.title {
+    font-size: x-large;
+    padding-bottom: 15px;
+    font-weight: bold;
+}
+
+.text {
+    font-size: larger;
+}
+
+.text2 {
+    font-size: medium;
+}
+
+.text2 a {
+    color: var(--main-text-color);
+}
+
+.inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+.userinput {
+  background-color: var(--secondary-bg-color);
+  border: 5px solid var(--main-outline-color);
+  color: var(--main-text-color);
+  font-size: larger;
+  margin-top: 10px;
+}
+
+.userinput:focus {
+    outline: none;
+  }
+
+.signup {
+    background-color: var(--secondary-bg-color);
+    border: 5px solid var(--main-outline-color);
+    color: var(--main-text-color);
+    cursor: pointer;
+    font-size: larger;
+    margin: 10px 0px;
+}
+
+.signup:hover {
+    background-color: var(--item-bg-color);
+    size: 110%;
+}
+  
+.notification {
+    font-size: medium;
+    color: rgb(190, 64, 64);
+    margin-bottom: 10px;
+}
+
+
+
+
+
+
+
+
+
+
+@media only screen and (max-width: 700px) {
+    .main {
+        width: 70%;
+    }
+}

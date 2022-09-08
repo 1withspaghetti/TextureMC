@@ -1,0 +1,163 @@
+<html>
+<head>
+  <title>Account - TextureMC</title>
+  <meta name="description" content="TextureMC is a free minecraft texture pack editor, create your own texture pack in seconds!">
+  <link rel="icon" type="image/png" href="/images/icon.png">
+  <meta content="TextureMC" property="og:title">
+  <meta content="TextureMC is a free minecraft texture pack editor, create your own texture pack in seconds!" property="og:description">
+  <meta content="TextureMC" property="og:site_name">
+  <meta content='/images/editor.png' property='og:image'>
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="text/javascript" src="/js/login.js"></script>
+  <script type="text/javascript" src="script.js"></script>
+  <script type="text/javascript" src="/lib/jszip.min.js"></script>
+  <script type="text/javascript" src="/lib/FileSaver.min.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,800;0,900;1,100;1,200;1,300;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="topnav" id="topnav">
+    <a class="logo" href="/">TextureMC<span class="beta">BETA</span></a>
+    <a href="/about" style="float: left;">About</a>
+    <a href="/login" class="right" th:unless="${hasSession}">Log In</a>
+    <a href="/signup" class="right" th:unless="${hasSession}">Sign Up</a>
+    <a href="/account" class="right" th:if="${hasSession}">Account</a>
+  </div>
+  <div class="main">
+    <div class="infolist">
+      <h2>Account</h2>
+      <div class="hseperator"></div>
+      <img src="/images/Grass_Block.png">
+      <div class="username">
+        <h3 id="username" th:text="${username}"></h3>
+        <img src="/images/edit.svg" onclick="confirmChangeUsername();">
+      </div>
+      <div class="vdisplay">
+        <span class="linkbtn" onclick="logout()">Log Out</span>
+        <span class="linkbtn" onclick="confirmChangePassword()">Change Password</span>
+        <span class="linkbtn" onclick="confirmDelUser()">Delete Account</span>
+      </div>
+    </div>
+    <div class="vseperator"></div>
+    <div class="infolist">
+      <h2>Texture Packs</h2>
+      <div class="hseperator"></div>
+      <div id="packs">
+        <div onclick=openPack(event); th:each="pack : ${texturePacks}" th:attr="id=${pack.id}">
+          <v><span th:text="${pack.name}"></span><img src="/images/edit.svg" onclick=confirmChangePackname(event)></v>
+          <v><span th:text="${pack.version}"></span><img src="/images/trash.svg" onclick=confirmDelete(event)><img src="/images/export.svg" onclick=confirmExport(event)><img src="/images/copy.svg" onclick=confirmCopy(event)></v>
+        </div>
+      </div>
+      <div style="display: none;" th:if="${#lists.isEmpty(texturePacks)}">You don't have any packs yet<br>Click the button below to get started!</div><br>
+      <div th:if="${#lists.size(texturePacks) < 5}">
+        <label class="importpack newpack" onclick="openPopup('createpack');document.getElementById('createPackNotification').innerText = ''">&#10133; New Texture Pack</label>
+        <label for="importPackFile" class="importpack">Import File</label>
+        <input type="file" class="hidden" id="importPackFile" accept=".zip" onchange="confirmImportPack()">
+      </div>
+    </div>
+  </div>
+  <div class="popup" id="popupbg" onclick="if (event.target.id == 'popupbg') closeAll(event);">
+    <div id="createpack">
+      <h2>Create a new Texture Pack</h2>
+	    <p>Give your new pack a name and select a minecraft version!</p>
+      <div class="hdisplay">
+        <input class="textInput" type="text" id="packName" placeholder="Pack Name">
+        <select class="selectInput" name="Minecraft Version" id="packVersion" value="1.18.1">
+          <option value="1.18.1">1.18.1</option>
+          <option value="1.17.1">1.17.1</option>
+          <option value="1.16.5">1.16.5</option>
+          <option value="1.15.2">1.15.2</option>
+          <option value="1.14.2">1.14.2</option>
+          <option value="1.13.2">1.13.2</option>
+          <option value="1.12.2">1.12.2</option>
+          <option value="1.11.1">1.11.2</option>
+          <option value="1.10.1">1.10.2</option>
+          <option value="1.9.3">1.9.3</option>
+          <option value="1.8.9">1.8.9</option>
+        </select>
+      </div>
+      <div class="notification" id="createPackNotification"></div>
+      <button class="popbtn" onclick="closePopup('createpack')">Cancel</button>
+      <button class="popbtn primarybtn" onclick="createPack();">Create Pack</button>
+    </div>
+    <div id="changeUsernamePopup">
+      <h2>Change your Username</h2>
+      <p>Usernames may only contain letters, numbers,<br> underscores, and be 3 to 16 characters long.</p>
+      <div class="hdisplay">
+        <input class="textInput" type="text" id="newUsername" placeholder="New Username" autocomplete="off">
+      </div>
+      <div class="notification" id="changeUsernameNotification"></div>
+      <button class="popbtn" onclick="closePopup('changeUsernamePopup')">Cancel</button>
+      <button class="popbtn primarybtn" onclick="changeUsername();">Change Username</button>
+      <div class="popfooter">You must use the new username to log in after changing it</div>
+    </div>
+    <div id="changePacknamePopup">
+      <h2>Change Texturepack Name</h2>
+      <p>Usernames must be 3 to 16 characters long.</p>
+      <div class="hdisplay">
+        <input class="textInput" type="text" id="newPackname" placeholder="New Texturepack name" autocomplete="off">
+      </div>
+      <div class="notification" id="changePacknameNotification"></div>
+      <button class="popbtn" onclick="closePopup('changePacknamePopup')">Cancel</button>
+      <button class="popbtn primarybtn" onclick="changePackname();">Change Name</button>
+      <div class="popfooter">PackID: <i id="confirmPacknameId"></i></div>
+    </div>
+    <div id="confirmDelete">
+      <h2>Confirm Delete</h2>
+	    <p>Are you sure you would like to delete the pack <b id="confirmDeleteName"></b>?</p>
+      <div class="notification">This cannot be undone!</div>
+      <button class="popbtn" onclick="closePopup('confirmDelete')">Cancel</button>
+      <button class="popbtn primarybtn" onclick="deletePack();">Delete Pack</button>
+      <div class="popfooter">PackID: <i id="confirmDeleteId"></i></div>
+    </div>
+    <div id="confirmExport">
+      <h2>Export Texture Pack</h2>
+	    <p>Click the button below to download the pack <b id="confirmExportName"></b></p>
+      <div class="notification" id="confirmExportNotification"></div>
+      <button class="popbtn" onclick="closePopup('confirmExport')">Cancel</button>
+      <button class="popbtn primarybtn" onclick="exportPack();">Download Zip</button>
+      <div class="popfooter">PackID: <i id="confirmExportId"></i></div>
+    </div>
+    <div id="confirmImport">
+      <h2>Import Texture Pack</h2>
+	    <p>Please select a texture pack file to import</p>
+      <div class="fileinfo">
+        <b id="importPackName"></b><br>
+        <i id="importPackVersion"></i><br>
+        <span id="importPackDesc"></span>
+      </div>
+      <div class="notification" id="confirmImportNotification"></div>
+      <button class="popbtn" onclick="closePopup('confirmImport')">Cancel</button>
+      <button class="popbtn primarybtn" onclick="importPack();">Import Pack</button>
+    </div>
+    <div id="confirmCopy">
+      <h2>Copy Texture Pack</h2>
+	    <p>Click the button below to create a copy of the pack <b id="confirmCopyName"></b></p>
+      <div class="notification" id="confirmCopyNotification"></div>
+      <button class="popbtn" onclick="closePopup('confirmExport')">Cancel</button>
+      <button class="popbtn primarybtn" onclick="copyPack();">Copy</button>
+      <div class="popfooter">PackID: <i id="confirmCopyId"></i></div>
+    </div>
+    <div id="changePasswordPopup">
+      <h2>Change your Password</h2>
+      <p>You must use the new password to log in after changing it.</p>
+      <input class="textInput" type="password" id="oldPassword" placeholder="Old Password" autocomplete="current-password">
+      <input class="textInput" type="password" id="newPassword" placeholder="New Password" autocomplete="new-password">
+      <div class="notification" id="changePasswordNotification"></div>
+      <button class="popbtn" onclick="closePopup('changePasswordPopup')">Cancel</button>
+      <button class="popbtn primarybtn" onclick="changePassword();">Change Password</button>
+    </div>
+    <div id="delUserPopup">
+      <h2>Delete your Account</h2>
+      <p>Please enter your password to continue</p>
+      <div class="hdisplay">
+        <input class="textInput" type="password" id="delUserPassword" placeholder="Enter your Password" autocomplete="current-password">
+      </div>
+      <div class="notification" id="delUserNotification">This CANNOT be undone!</div>
+      <button class="popbtn" onclick="closePopup('delUserPopup')">Cancel</button>
+      <button class="popbtn primarybtn" onclick="delUser();">Delete Account</button>
+    </div>
+  </div>
+</body>
+</html>

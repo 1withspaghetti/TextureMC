@@ -1,0 +1,40 @@
+<html>
+<head>
+  <title>Sign Up - TextureMC</title>
+  <meta name="description" content="TextureMC is a free minecraft texture pack editor, create your own texture pack in seconds!">
+  <link rel="icon" type="image/png" href="/images/icon.png">
+  <meta content="TextureMC" property="og:title">
+  <meta content="TextureMC is a free minecraft texture pack editor, create your own texture pack in seconds!" property="og:description">
+  <meta content="TextureMC" property="og:site_name">
+  <meta content='/images/editor.png' property='og:image'>
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <script type="text/javascript" src="/js/login.js"></script>
+  <script type="text/javascript" src="script.js"></script>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,800;0,900;1,100;1,200;1,300;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="topnav">
+    <a class="logo" href="/">TextureMC<span class="beta">BETA</span></a>
+    <a href="/about" style="float: left;">About</a>
+    <a href="/login" class="right" th:unless="${hasSession}">Log In</a>
+    <a href="/signup" class="right" th:unless="${hasSession}">Sign Up</a>
+    <a href="/account" class="right" th:if="${hasSession}">Account</a>
+  </div>
+  <div class="main">
+    <div class="title">TextureMC Sign Up</div>
+    <div class="text">Please enter a username and password</div>
+    <div class="inputs">
+        <input type="text" id="username" placeholder="Username" autocomplete="username" autofocus class="userinput">
+        <input type="password" id="password" placeholder="Password" autocomplete="new-password" class="userinput">
+        <input type="password" id="password2" placeholder="Re-enter password" autocomplete="new-password" class="userinput">
+        <input type="test" id="betakey" placeholder="Beta tester key" class="userinput">
+        <input type="button" value="Continue" class="signup" onclick="signup()">
+    </div>
+    <div class="notification" id="notification"></div>
+    <div class="text2">Already have an account? <a href="/login">Log In</a></div>
+</div>
+  
+</body>
+</html>

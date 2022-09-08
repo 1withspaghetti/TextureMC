@@ -1,0 +1,125 @@
+<html>
+<head>
+  <title>TextureMC</title>
+  <meta name="description" content="TextureMC is a free minecraft texture pack editor, create your own texture pack in seconds!">
+  <link rel="icon" type="image/png" href="/images/icon.png">
+  <meta content="TextureMC" property="og:title">
+  <meta content="TextureMC is a free minecraft texture pack editor, create your own texture pack in seconds!" property="og:description">
+  <meta content="TextureMC" property="og:site_name">
+  <meta content='/images/editor.png' property='og:image'>
+  <script type="text/javascript" src="/js/login.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,800;0,900;1,100;1,200;1,300;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="topnav">
+    <a class="logo" href="/">TextureMC<span class="beta">BETA</span></a>
+    <a href="/about" style="float: left;">About</a>
+    <a href="/login" class="right" th:unless="${hasSession}">Log In</a>
+    <a href="/signup" class="right" th:unless="${hasSession}">Sign Up</a>
+    <a href="/account" class="right" th:if="${hasSession}">Account</a>
+  </div>
+  <div class="content">
+    <div class="panel">
+      <div class="panel-text beta-notice" id="beta">
+        <span>
+          TextureMC is currently in BETA, please report bugs to <a href="mailto:bugs@texturemc.com?subject=I%20found%20a%20bug!&body=Description%3A%0D%0A%0D%0A%0D%0A%0D%0ASteps%20to%20re-create%3A%0D%0A%0D%0A%0D%0A">bugs@texturemc.com</a>! 
+          During this phase, only limited people have access to accounts by using a 
+          beta tester key. During the frequent updates, data like texture packs may 
+          be lost and accounts may be removed without notice. Because of this, do 
+          not upload or create anything that you do not want to lose!
+        </span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-text" id="credits">
+        <h1>Credits</h1>
+        <span>
+          Big thanks to <a href="https://www.piskelapp.com/">Piskel</a> for providing an amazing pixel art editor for this 
+          platform to use. We would never be the same without it! Keep in mind, Texturemc.com is in no way affiliated with <a href="https://www.piskelapp.com/">piskelapp.com</a>. 
+          The editor is used under the <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache License 2.0.</a>
+        </span>
+       </div>
+    </div>
+    <div class="panel">
+      <div class="panel-text text-container" id="terms">
+        <div class="text-centered">
+          <h1 class="text-centered">Terms and Conditions</h1>
+          <h4>Last Updated: 2/8/2022</h4>
+          <span>
+            Please acknowledge these terms and conditions carefully before using the 
+            texturemc.com website. Your access to and use of texturemc.com is conditioned 
+            on your acceptance of and compliance with these terms. These terms apply to 
+            all visitors, users and others who access or use texturemc.com. By accessing 
+            or using the texturemc.com you agree to be bound by these terms. If you 
+            disagree with any part of the terms then you may not access texturemc.com.
+            <br>
+            Please Note: These terms do not apply to any linked website or resource.
+          </span>
+          <h4 class="text-centered">BY USING THIS SERVICE, YOU AGREE TO THE FOLLOWING TERMS OF USE:</h4>
+        </div>
+        <br>
+        <h2>Content Ownership</h2>
+         <span>
+          You can use the content you created using the service for any purpose, commercial or not. 
+          Texturemc.com does not hold any right on the content created using this service. 
+        </span>
+        <h2>Content Creation</h2>
+        <span>
+          Texturemc.com is also not responsible for any of the content you create and save on your account. 
+          You are responsible for the material created and any harm resulting from that content. By creating 
+          content, you represent and warrant that:
+         </span>
+          <ul>
+            <li>You must be over the age of 13 to use texturemc.com without permission from a parent or guardian.</li>
+            <li>You have satisfied any third-party licenses relating to the content.</li>
+            <li>Texturemc.com should remain safe for all ages.</li>
+            <li>Content can not be offensive, pornographic, threatening, or violate our terms and conditions and/or privacy policy.</li>
+            <li>That you are the owner and have full permission of the content you are uploading.</li>
+          </ul>
+        <span>We reserve the right to remove content that doesn't follow the rules stated above.</span>
+        <h2>Changes</h2>
+        <span>
+          We reserve the right to modify or replace these terms or privacy policy at any 
+          time. If a revision is material is made, we will try to provide at least 30 
+          days notice prior to the new terms taking effect. What constitutes a material 
+          change will be determined at our sole discretion.
+        </span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-text text-container" id="privacy">
+        <div class="text-centered">
+          <h1 class="text-centered">Privacy Policy</h1>
+          <h4>Last Updated: 2/8/2022</h4>
+        </div>
+        <h3>Collection</h3>
+        <span>The data we collect is required for you to access your content in the future. This includes:</span>
+        <ul>
+          <li>Your username and password</li>
+          <li>Any texture packs, textures, or content that have been created, updated, or deleted on this website</li>
+        </ul>
+        <h3>Storage</h3>
+        <span>
+          Sensitive data including passwords are <a href="https://en.wikipedia.org/wiki/SHA-2">encrypted</a> 
+          within a self-hosted database along with other account data. Your texture packs are stored in a 
+          separate MongoDB database with default encryption.
+        </span>
+        <h3>Usage</h3>
+        <span>
+          This data is used to display your username on your profile. No data is not shared with any third party. 
+          Your data is stored until you delete the content (if available) or delete your account.
+        </span>
+        <h2>Cookie Policy</h2>
+        <span>
+          Strictly essential first-party cookies are used to keep you logged in during your session, 
+          and are removed when the browser is closed. If you disable or remove these cookies, you will 
+          be unable to sign-up or log in to texturemc.com.
+        </span>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

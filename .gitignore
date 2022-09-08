@@ -1,0 +1,5 @@
+.settings/
+other/
+static/assets/
+static/node_modules/
+target/

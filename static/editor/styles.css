@@ -1,0 +1,325 @@
+.topnav {
+    position: relative !important;
+}
+
+.editor {
+    width: 100%;
+    height: calc(100vh - 50px);
+    overflow: hidden;
+    display: flex;
+}
+
+.pack {
+    font-family: Helvetica;
+    color: var(--main-text-color);
+    padding: 5px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 1.25rem;
+    font-weight: bold;
+    border-bottom: 5px solid var(--main-outline-color);
+}
+  
+.pack .save img {
+    cursor: pointer;
+    height: 32px;
+    float: right;
+}
+  
+.pack #packVersion {
+    color: var(--secondary-selection-color);
+}
+  
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: 2;
+    background-color: var(--item-bg-color);
+    border: 5px solid var(--main-outline-color);
+    width: fit-content;
+    height: 100%;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.editor-container {
+    width: 100%;
+    position: relative;
+}
+
+.toolbar {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+
+    width: 75px;
+
+    padding: 10px 0;
+
+    background-color: var(--main-bg-color);
+    border-radius: 0 10px 10px 0;
+    box-sizing: content-box;
+}
+
+.pen-size {
+    position: relative;
+    padding: 0px 5px;
+    text-align: center;
+}
+
+.pen-size canvas {
+    box-sizing: border-box;
+    width: 100%;
+    image-rendering: pixelated;
+}
+
+.toollist {
+    flex-direction: column;
+    margin-top: 10px;
+}
+
+.tool {
+    background-color: var(--item-bg-color);
+    border: 3px solid var(--main-bg-color);
+    padding: 10px;
+    margin: 5px;
+    transition: all 100ms;
+    cursor: pointer;
+}
+
+.tool img {
+    image-rendering: pixelated;
+    width: 100%;
+    height: 100%;
+}
+
+.tool:hover {
+    border: 3px solid var(--secondary-selection-color)
+}
+
+.tool.selected {
+    border: 3px solid var(--main-selection-color);
+}
+
+.color-selection {
+    text-align: center;
+    box-sizing: border-box;
+    width: 100% !important;
+    height: 45px;
+}
+
+.sp-replacer {
+    display: block !important;
+    background-color: var(--item-bg-color) !important;
+    border: 3px solid var(--main-bg-color) !important;
+    box-sizing: border-box !important;
+    padding: 5px !important;
+    margin: 5px !important;
+    height: 100%;
+}
+
+.sp-replacer:hover {
+    border: 3px solid var(--secondary-selection-color) !important;
+}
+
+.sp-replacer.sp-active {
+    border: 3px solid var(--main-selection-color) !important;
+}
+
+.sp-dd {
+    display: none;
+}
+
+.sp-preview {
+    border: none !important;
+    box-sizing: border-box !important;
+    width: 100% !important;
+    height: 100% !important;
+    margin: 0 !important;
+}
+
+.sp-container {
+    background-color: var(--item-bg-color) !important;
+    border: 3px solid var(--main-selection-color) !important;
+}
+
+.sp-palette-container {
+    border-right: 3px solid var(--main-bg-color) !important;
+}
+
+.sp-picker-container {
+    border: none !important;
+}
+
+.sp-input {
+    color: var(--main-text-color) !important;
+    font-weight: bold !important;
+}
+
+.sp-color, .sp-hue {
+    border : 1px solid #222;
+}
+
+.slider {
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+    width: 100%;
+    margin: 10px 0;
+    background: var(--secondary-selection-color);
+    border-radius: 10px;
+    height: 10px;
+    outline: none;
+}
+
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: var(--main-selection-color);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    background: var(--main-selection-color);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+#camera {
+    display: block;
+    position: relative;
+    background: #5f5f5f;
+    width: 100%;
+    height: calc(100vh - 50px);
+    overflow: hidden;
+}
+
+#pos_container {
+    position: absolute;
+    transform-origin: 0px 0px;
+    box-sizing: content-box;
+
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -webkit-user-drag: none;
+    -ms-user-select: none;
+}
+
+/*#zoom_container {
+    position: relative;
+    pointer-events: none;
+    transform-origin: 0px 0px;
+}*/
+
+#pos_container * {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    image-rendering: pixelated;
+}
+
+.checkerboard-bg {
+    background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAABlBMVEVMTExVVVUnhsEkAAAAHUlEQVR4AWOAAUYoQOePEAUj3v9oYDQ9gMBoegAAJFwCAbLaTIMAAAAASUVORK5CYII=');
+    background-repeat: repeat;
+    background-position: center;
+}
+
+.checkerboard-bg.small {
+    background-size: 4px;
+}
+
+.checkerboard-bg.large {
+    background-size: 16px;
+}
+
+.filetree {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 100%;
+    box-sizing: border-box;
+    color: var(--main-text-color);
+    font-size: 24px;
+    user-select: none;
+    width: 300px;
+}
+
+.filetree, folder {
+    display: flex;
+    flex-direction: column;
+}
+
+folder {
+    padding-left: 20px;
+    display: none;
+}
+
+folder.open {
+    display: flex;
+}
+
+file {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    float: left;
+    margin: 5px 0px;
+    cursor: pointer;
+}
+
+file.selected {
+    color: var(--main-selection-color);
+}
+
+file img {
+    max-width: 64px;
+    height: 32px;
+    margin-right: 5px;
+    image-rendering: pixelated;
+}
+
+file span {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+folder-label {
+    display: flex;
+    height: 32px;
+    font-weight: bold;
+    background: var(--secondary-bg-color);
+    cursor: pointer;
+}
+
+folder-label:not(folder folder-label) {
+    position: sticky;
+    top: 0;
+}
+
+folder-label::before {
+    background-image: url('imgs/expand0.svg');
+    background-size: 35px 35px;
+    background-position: center;
+    width: 25px;
+    height: 32px;
+    content: "";
+}
+
+folder-label.open::before {
+    background-image: url('imgs/expand1.svg');
+}

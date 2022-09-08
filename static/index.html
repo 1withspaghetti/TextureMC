@@ -1,0 +1,67 @@
+<html>
+<head>
+  <title>TextureMC</title>
+  <meta name="description" content="TextureMC is a free minecraft texture pack editor, create your own texture pack in seconds!">
+  <link rel="icon" type="image/png" href="/images/icon.png">
+  <meta content="TextureMC" property="og:title">
+  <meta content="TextureMC is a free minecraft texture pack editor, create your own texture pack in seconds!" property="og:description">
+  <meta content="TextureMC" property="og:site_name">
+  <meta content='/images/editor.png' property='og:image'>
+  <script type="text/javascript" src="/js/login.js"></script>
+  <link rel="stylesheet" type="text/css" href="/css/main.css">
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,800;0,900;1,100;1,200;1,300;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="topnav">
+    <a class="logo" href="/">TextureMC<span class="beta">BETA</span></a>
+    <a href="/about">About</a>
+    <a href="/login" class="right" th:unless="${hasSession}">Log In</a>
+    <a href="/signup" class="right" th:unless="${hasSession}">Sign Up</a>
+    <a href="/account" class="right" th:if="${hasSession}">Account</a>
+  </div>
+  <div class="content">
+    <div class="panel">
+      <img src="images/editor.png" class="panel-display shadow">
+      <div class="panel-text">
+        <h1>Welcome to TextureMC</h1>
+        <span>Create your very own minecraft texture pack with 
+           this simple Web Application. The powerful editor 
+           is provided by <a href="https://www.piskelapp.com/">Piskel</a> and has many unique tools 
+           for you to bring your texture pack to life!</span><br>
+         <a href="/signup"><button class="button-primary">Get Started</button></a>
+       </div>
+    </div>
+    <div class="panel">
+      <div class="panel-text beta-notice">
+        <span><b>Please note:</b> This website is in <i>BETA</i>, <a href="/about">Click Here</a> to see more!</span>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-text">
+        <h2>Draw Your Imagination</h2>
+        <span>Using the tools provided, make your very own 
+          edits and transform the minecraft textures into whatever you want. 
+          Resize the canvas and even add animations 
+          to truly make your pack a word of art!</span><br>
+        <a href="/signup"><button class="button-primary">Start Drawing</button></a>
+      </div>
+      <img src="images/drawing.png" class="panel-display">
+    </div>
+    <div class="panel">
+      <img src="images/install.png" class="panel-display shadow">
+      <div class="panel-text">
+        <h2>Bring your pack to life</h2>
+        <span>By clicking the export button [<img src="images/export.svg" style="height: 1.2rem;">], you can 
+           compile all the textures you have created into 
+           a zip file. All thats left is to drag your pack file 
+           into your minecraft folder and start playing! 
+           <b><a href="https://www.youtube.com/watch?v=RnX7gWhtYsk">Click Here</a></b> for more instructions on how to 
+           download and install your texture pack.</span><br>
+        <a href="/signup"><button class="button-primary">Create your pack</button></a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

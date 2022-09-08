@@ -1,0 +1,86 @@
+html, body {
+  font-family: poppins, sans-serif;
+  margin: 0;
+  background-color: #1D1D1D;
+
+  --main-bg-color: #1d1d1d;
+  --secondary-bg-color: #3a3a3a;
+  --item-bg-color: #333333;
+  
+  --main-outline-color: #252525;
+  --secondary-outline-color: #2d2d2d;
+  
+  --main-selection-color: #ffd700;
+  --secondary-selection-color: #888;
+  
+  --main-text-color: #ddd;
+}
+
+.topnav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background-color: var(--secondary-bg-color);
+  text-align: center;
+  overflow: hidden;
+  margin: 0%;
+  height: 50px;
+  box-shadow: 0px 0px 10px #000;
+}
+  
+.topnav a {
+  float: left;
+  color: var(--main-text-color);
+  background-color: var(--secondary-bg-color);
+  border: none;
+  text-align: center;
+  height: 50px;
+  padding: 0 15px;
+  line-height: 50px;
+  text-decoration: none;
+  font-size: 1.25rem;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.topnav .right {
+  float: right;
+}
+  
+.topnav a:hover {
+  color: var(--main-selection-color);
+  background-color: var(--item-bg-color);
+}
+  
+.topnav .logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+::-webkit-scrollbar {
+	width: 10px
+}
+
+::-webkit-scrollbar-track {
+	background-color: var(--main-bg-color)
+}
+
+::-webkit-scrollbar-thumb {
+	background: var(--secondary-bg-color);
+	border-radius: 1rem
+}
+
+::-webkit-scrollbar-thumb:hover {
+	background: var(--item-bg-color)
+}
+
+
+.beta {
+  color: #000;
+  background-color: var(--main-selection-color);
+  border-radius: 5px;
+  padding: 2px;
+  margin-left: 3px;
+  font-size: 12px;
+  font-weight: bold;
+}

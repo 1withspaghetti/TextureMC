@@ -1,0 +1,85 @@
+html, body {
+    color: var(--main-text-color);
+    font-family: poppins, sans-serif;
+}
+
+.title {
+    margin: 2rem;
+    text-align: center;
+
+}
+
+.title {
+    height: 4rem;
+    image-rendering: pixelated;
+}
+
+.content {
+    text-align: center;
+}
+
+.panel {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    margin: 7rem;
+}
+
+.panel-text {
+    font-size: 1.2rem;
+    max-width: 40%;
+}
+
+.panel-text a {
+    color: var(--main-text-color);
+}
+
+.panel-display {
+    margin: 0 5rem;
+    height: 20rem;
+}
+
+.button-primary {
+    background-color: var(--secondary-bg-color);
+    border: 3px solid var(--main-outline-color);
+    border-radius: 5px;
+    box-shadow: 2px 2px 8px black;
+    font-weight: bold;
+    font-size: 1.2rem;
+    font-family: poppins, sans-serif;
+    color: var(--main-text-color);
+    padding: 0.3rem 0.5rem;
+    margin: 1rem;
+    cursor: pointer;
+    transition: 0.1s;
+}
+
+.button-primary:hover {
+    color: var(--main-selection-color);
+    box-shadow: 1px 1px 4px black;
+}
+
+.shadow {
+    box-shadow: -7px 7px 10px black;
+}
+
+.beta-notice {
+    border: 3px solid var(--main-selection-color);
+    border-radius: 10px;
+    background-color: var(--item-bg-color);
+    padding: 1rem;
+}
+
+@media (max-width: 1000px) {
+
+    .panel {
+        margin: 0rem;
+        flex-direction: column;
+    }
+    .panel-text {
+        max-width: 70%;
+    }
+}
