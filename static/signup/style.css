@@ -36,7 +36,7 @@ body {
     color: var(--main-text-color);
 }
 
-.inputs {
+.vertical-form {
     display: flex;
     flex-direction: column;
 }

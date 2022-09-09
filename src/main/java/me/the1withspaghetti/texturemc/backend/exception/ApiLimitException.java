@@ -1,11 +1,12 @@
 package me.the1withspaghetti.texturemc.backend.exception;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.TOO_MANY_REQUESTS)
-public class ApiLimitException extends RuntimeException {
+public class ApiLimitException extends ApiException {
 	private static final long serialVersionUID = -8697122772894407871L;
-	// Status is managed with ResponseStatus annotation
+	
+	public ApiLimitException() {
+		super("Too many requests! Slow down!", HttpStatus.TOO_MANY_REQUESTS);
+	}
 }
 

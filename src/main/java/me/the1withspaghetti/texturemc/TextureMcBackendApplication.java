@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 
+import me.the1withspaghetti.texturemc.backend.database.AccountDB;
 import me.the1withspaghetti.texturemc.backend.util.ConsoleCommands;
 import me.the1withspaghetti.texturemc.backend.util.VersionControl;
 
@@ -15,6 +16,7 @@ import me.the1withspaghetti.texturemc.backend.util.VersionControl;
 public class TextureMcBackendApplication {
 
 	public static void main(String[] args) throws SQLException, IOException {
+		AccountDB.connect();
 		SpringApplication.run(TextureMcBackendApplication.class, args);
 		VersionControl.init();
 		ConsoleCommands.init(System.in);

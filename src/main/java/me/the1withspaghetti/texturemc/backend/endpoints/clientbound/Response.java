@@ -1,4 +1,4 @@
-package me.the1withspaghetti.texturemc.backend.objects;
+package me.the1withspaghetti.texturemc.backend.endpoints.clientbound;
 
 public class Response {
 	

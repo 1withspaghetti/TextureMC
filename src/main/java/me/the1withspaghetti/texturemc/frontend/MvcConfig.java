@@ -17,8 +17,8 @@ import org.thymeleaf.templateresolver.FileTemplateResolver;
 public class MvcConfig implements WebMvcConfigurer {
 	
 	private final String filePath = 
-			System.getProperty("os.name").startsWith("Windows") ? 
-					"C:\\Users\\tyler\\OneDrive\\Documents\\Websites\\texturemc\\" : 
+			/*System.getProperty("os.name").startsWith("Windows") ? 
+					"C:\\Users\\tyler\\OneDrive\\Documents\\Websites\\texturemc\\" : */
 					System.getProperty("user.dir")+File.separator;
 
     @Override
@@ -26,7 +26,7 @@ public class MvcConfig implements WebMvcConfigurer {
     	String filePath = "file:"+this.filePath+"static"+File.separator;
         registry.addResourceHandler("/**")
 			.addResourceLocations(filePath)
-			.setCachePeriod(3000);
+			.setCachePeriod(0);
         System.out.println("Serving files from: "+filePath);
     }
     

@@ -25,13 +25,14 @@
   <div class="main">
     <div class="title">TextureMC Sign Up</div>
     <div class="text">Please enter a username and password</div>
-    <div class="inputs">
-        <input type="text" id="username" placeholder="Username" autocomplete="username" autofocus class="userinput">
-        <input type="password" id="password" placeholder="Password" autocomplete="new-password" class="userinput">
-        <input type="password" id="password2" placeholder="Re-enter password" autocomplete="new-password" class="userinput">
-        <input type="test" id="betakey" placeholder="Beta tester key" class="userinput">
-        <input type="button" value="Continue" class="signup" onclick="signup()">
-    </div>
+    <form class="vertical-form" action="/signup" method="post">
+      <input type="email" name="email" placeholder="Email" autocomplete="email" autofocus class="userinput">
+      <input type="text" name="username" placeholder="Username" autocomplete="username" class="userinput">
+      <input type="password" name="password" placeholder="Password" autocomplete="new-password" class="userinput">
+      <input type="password" name="password2" placeholder="Re-enter password" autocomplete="new-password" class="userinput">
+      <input type="text" name="beta_key" placeholder="Beta tester key" class="userinput">
+      <input type="submit" value="Sign Up" class="signup">
+    </form>
     <div class="notification" id="notification"></div>
     <div class="text2">Already have an account? <a href="/login">Log In</a></div>
 </div>
