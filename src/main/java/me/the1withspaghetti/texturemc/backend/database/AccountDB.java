@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 
 public class AccountDB {
 	
@@ -17,14 +18,19 @@ public class AccountDB {
 					+ " email TEXT NOT NULL,"
 	                + "	username TEXT NOT NULL,"
 	                + "	hash TEXT NOT NULL,"
-	                + " verified BOOL DEFAULT 0,"
-	                + " lastSentEmail BIGINT DEFAULT 0"
+	                + " verified BOOL DEFAULT 0"
 	                + ");");
 			con.createStatement().execute("CREATE TABLE IF NOT EXISTS packs ("
 					+ " id BIGINT PRIMARY KEY,"
 	                + "	userId BIGINT NOT NULL"
 					+ " name TEXT NOT NULL"
 	                + " version TEXT NOT NULL"
+					+ " FOREIGN KEY (userId) REFERENCES accounts(id)"
+	                + ");");
+			con.createStatement().execute("CREATE TABLE IF NOT EXISTS verification ("
+					+ " id BIGINT PRIMARY KEY,"
+	                + "	userId BIGINT NOT NULL"
+					+ " sent BIGINT NOT NULL"
 					+ " FOREIGN KEY (userId) REFERENCES accounts(id)"
 	                + ");");
 			con.createStatement().execute("CREATE INDEX IF NOT EXISTS accounts_by_id ON accounts (id);");
@@ -35,13 +41,25 @@ public class AccountDB {
 		}
 	}
 	
-	public static void addUser(long id, String email, String username, String hash, long lastSentEmail) throws SQLException {
-		PreparedStatement ps = con.prepareStatement("INSERT INTO accounts (id, email, username, hash, lastSentEmail) VALUES(?,?,?,?,?);");
+	public static void purgeOldData() throws SQLException {
+		PreparedStatement ps = con.prepareStatement("DELETE FROM verification WHERE sent < ?;");
+		ps.setLong(1, System.currentTimeMillis() - TimeUnit.DAYS.convert(1, TimeUnit.MILLISECONDS));
+	}
+	
+	public static void addUser(long id, String email, String username, String hash) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("INSERT INTO accounts (id, email, username, hash) VALUES(?,?,?,?);");
 		ps.setLong(1, id);
 		ps.setString(2, email);
 		ps.setString(3, username);
 		ps.setString(4, hash);
-		ps.setLong(5, lastSentEmail);
+		ps.execute();
+	}
+	
+	public static void createVerificationRequest(long id, long userId, long sent) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("INSERT INTO verification (id, userId, sent) VALUES(?,?,?);");
+		ps.setLong(1, id);
+		ps.setLong(2, userId);
+		ps.setLong(3, sent);
 		ps.execute();
 	}
 }

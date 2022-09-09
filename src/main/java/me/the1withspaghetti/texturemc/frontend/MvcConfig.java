@@ -16,10 +16,7 @@ import org.thymeleaf.templateresolver.FileTemplateResolver;
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
 	
-	private final String filePath = 
-			/*System.getProperty("os.name").startsWith("Windows") ? 
-					"C:\\Users\\tyler\\OneDrive\\Documents\\Websites\\texturemc\\" : */
-					System.getProperty("user.dir")+File.separator;
+	private final String filePath = System.getProperty("user.dir")+File.separator;
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -36,7 +33,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
         var tr = new FileTemplateResolver();
 
-        tr.setPrefix(filePath+"static"+File.separator);
+        tr.setPrefix(filePath+"templates"+File.separator);
         tr.setCacheable(false);
         tr.setSuffix(".html");
         tr.setTemplateMode("HTML");
