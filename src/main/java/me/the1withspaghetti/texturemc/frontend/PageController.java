@@ -1,43 +1,66 @@
 package me.the1withspaghetti.texturemc.frontend;
 
+import java.sql.SQLException;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import me.the1withspaghetti.texturemc.backend.database.AccountDB;
+import me.the1withspaghetti.texturemc.backend.service.SessionService;
 
 @Controller
 public class PageController {
 	
-	/*@GetMapping("/")
-	public ModelAndView getHome(@CookieValue(value = "session_token", defaultValue = "") String token) {
-		Map<String, Object> model = new HashMap<String, Object>();
-		if (Accounts.checkToken(token) != null) 
-			model.put("hasSession", true);
-		return new ModelAndView("home", model);
+	@GetMapping({"/","/index.html"})
+	public String getHome(Model model, @CookieValue(value = "session_token", defaultValue = "") String token) {
+		model.addAttribute("hasSession", SessionService.getSession(token) != null);
+		return "";
 	}
 	
-	@GetMapping("/about")
-	public ModelAndView getAbout(@CookieValue(value = "session_token", defaultValue = "") String token) {
-		Map<String, Object> model = new HashMap<String, Object>();
-		if (Accounts.checkToken(token) != null) 
-			model.put("hasSession", true);
-		return new ModelAndView("about", model);
+	@GetMapping({"/about/","/about/index.html"})
+	public String getAbout(Model model, @CookieValue(value = "session_token", defaultValue = "") String token) {
+		model.addAttribute("hasSession", SessionService.getSession(token) != null);
+		return "about";
 	}
 	
-	@GetMapping("/login")
-	public ModelAndView getLogin(@CookieValue(value = "session_token", defaultValue = "") String token) {
-		Map<String, Object> model = new HashMap<String, Object>();
-		if (Accounts.checkToken(token) != null) 
-			model.put("hasSession", true);
-		return new ModelAndView("login", model);
+	@GetMapping({"/login/","/login/index.html"})
+	public String getLogin(Model model, @CookieValue(value = "session_token", defaultValue = "") String token) {
+		model.addAttribute("hasSession", SessionService.getSession(token) != null);
+		return "login";
 	}
 	
-	@GetMapping("/signup")
-	public ModelAndView getSignup(@CookieValue(value = "session_token", defaultValue = "") String token) {
-		Map<String, Object> model = new HashMap<String, Object>();
-		if (Accounts.checkToken(token) != null) 
-			model.put("hasSession", true);
-		return new ModelAndView("signup", model);
+	@GetMapping({"/signup/","/signup/index.html"})
+	public String getSignup(Model model, @CookieValue(value = "session_token", defaultValue = "") String token) {
+		model.addAttribute("hasSession", SessionService.getSession(token) != null);
+		return "signup";
 	}
 	
-	@GetMapping("/account")
+	@GetMapping({"/confirm-email"})
+	public String getEmailConfirm(Model model, @CookieValue(value = "session_token", defaultValue = "") String token, @RequestParam(name="confirmation") String idStr) {
+		model.addAttribute("hasSession", SessionService.getSession(token) != null);
+		
+		try {
+			long id = Long.parseLong(idStr);
+			long user = AccountDB.getEmailConfirmation(id);
+			if (user != 0) {
+				AccountDB.confirmUser(id, user);
+				return "redirect: /accounts/";
+			} else {
+				model.addAttribute("error", "Email confirmation expired, please re-send a confirmation email.");
+				return "error";
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		model.addAttribute("error", "Internal Server Error, please try again.");
+		return "error";
+	}
+	
+	/*@GetMapping("/account")
 	public ModelAndView getAccount(@CookieValue(value = "session_token", defaultValue = "") String token) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		UUID userId = Accounts.checkToken(token);
@@ -83,12 +106,11 @@ public class PageController {
 			e.printStackTrace();
 		}
 		return new ModelAndView("editor", model);
-	}
+	}*/
 	
 	@GetMapping("/error")
-	public ModelAndView getError(@CookieValue(value = "session_token", defaultValue = "") String token, Model model) {
-		if (Accounts.checkToken(token) != null) 
-			model.addAttribute("hasSession", true);
-		return new ModelAndView("error", model.asMap());
-	}*/
+	public String getError(Model model, @CookieValue(value = "session_token", defaultValue = "") String token) {
+		model.addAttribute("hasSession", SessionService.getSession(token) != null);
+		return "error";
+	}
 }

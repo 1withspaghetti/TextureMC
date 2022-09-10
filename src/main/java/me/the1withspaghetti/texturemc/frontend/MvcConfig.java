@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Description;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
@@ -32,14 +31,11 @@ public class MvcConfig implements WebMvcConfigurer {
     public FileTemplateResolver templateResolver() {
 
         var tr = new FileTemplateResolver();
-
-        tr.setPrefix(filePath+"templates"+File.separator);
+        tr.setPrefix(filePath+"static"+File.separator);
         tr.setCacheable(false);
-        tr.setSuffix(".html");
+        tr.setSuffix("/index.html");
         tr.setTemplateMode("HTML");
         tr.setCharacterEncoding("UTF-8");
-        
-
         return tr;
     }
 
@@ -58,16 +54,9 @@ public class MvcConfig implements WebMvcConfigurer {
     public ViewResolver viewResolver() {
 
         var viewResolver = new ThymeleafViewResolver();
-
         viewResolver.setTemplateEngine(templateEngine());
         viewResolver.setCharacterEncoding("UTF-8");
 
         return viewResolver;
-    }
-
-    @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/").setViewName("index");
-        registry.addViewController("/login").setViewName("login/index");
     }
 }
