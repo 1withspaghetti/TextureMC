@@ -16,6 +16,7 @@ html, body {
 
 .content {
     text-align: center;
+    padding-top: 100px;
 }
 
 .panel {
@@ -25,7 +26,7 @@ html, body {
     justify-content: center;
     align-items: center;
     align-content: center;
-    margin: 7rem;
+    margin: 100px;
 }
 
 .panel-text {

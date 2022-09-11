@@ -1,6 +1,8 @@
+<!DOCTYPE HTML>
 <html>
 <head>
   <title>TextureMC</title>
+  <th:block th:fragment="header">
   <meta name="description" content="TextureMC is a free minecraft texture pack editor, create your own texture pack in seconds!">
   <link rel="icon" type="image/png" href="/images/icon.png">
   <meta content="TextureMC" property="og:title">
@@ -9,17 +11,18 @@
   <meta content='/images/editor.png' property='og:image'>
   <script type="text/javascript" src="/js/login.js"></script>
   <link rel="stylesheet" type="text/css" href="/css/main.css">
-  <link rel="stylesheet" type="text/css" href="/css/style.css">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,800;0,900;1,100;1,200;1,300;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  </th:block>
+  <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
-  <div class="topnav">
+  <div class="topnav" th:fragment="navbar">
     <a class="logo" href="/">TextureMC<span class="beta">BETA</span></a>
-    <a href="/about">About</a>
-    <a href="/login" class="right" th:unless="${hasSession}">Log In</a>
-    <a href="/signup" class="right" th:unless="${hasSession}">Sign Up</a>
-    <a href="/account" class="right" th:if="${hasSession}">Account</a>
+    <a href="/about/">About</a>
+    <a href="/login/" class="right" th:unless="${hasSession}">Log In</a>
+    <a href="/signup/" class="right" th:unless="${hasSession}">Sign Up</a>
+    <a href="/account/" class="right" th:if="${hasSession}">Account</a>
   </div>
   <div class="content">
     <div class="panel">
