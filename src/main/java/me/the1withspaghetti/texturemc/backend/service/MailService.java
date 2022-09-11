@@ -1,13 +1,14 @@
 package me.the1withspaghetti.texturemc.backend.service;
 
 import java.io.IOException;
+import java.io.InputStream;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridAPI;
 import com.sendgrid.helpers.mail.Mail;
 import com.sendgrid.helpers.mail.objects.Email;
@@ -16,8 +17,12 @@ import com.sendgrid.helpers.mail.objects.Personalization;
 @Service
 public class MailService {
 	
-	@Autowired
     private static SendGridAPI sendGridAPI;
+    
+    public static void init() throws IOException {
+    	InputStream in = SendGridAPI.class.getResourceAsStream("/SendGrid.secret");
+    	sendGridAPI = new SendGrid(new String(in.readAllBytes()));
+    }
 	
 	public static boolean sendConfirmationEmail(String email, String confirmation_url) throws IOException {
 		Email to = new Email(email);

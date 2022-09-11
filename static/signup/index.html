@@ -4,24 +4,26 @@
   <title>Sign Up - TextureMC</title>
   <div th:replace="/index.html :: header"></div>
   <link rel="stylesheet" type="text/css" href="/signup/style.css">
-  <script type="text/javascript" src="/signup/script.js"></script>
 </head>
 <body>
   <div th:replace="/index.html :: navbar"></div>
   <div class="main">
     <div class="title">TextureMC Sign Up</div>
     <div class="text">Please enter a username and password</div>
-    <form class="vertical-form" action="/signup/" method="post">
-      <input type="email" name="email" placeholder="Email" autocomplete="email" autofocus class="userinput">
-      <input type="text" name="username" placeholder="Username" autocomplete="username" class="userinput">
-      <input type="password" name="password" placeholder="Password" autocomplete="new-password" class="userinput">
-      <input type="password" name="password2" placeholder="Re-enter password" autocomplete="new-password" class="userinput">
-      <input type="text" name="beta_key" placeholder="Beta tester key" class="userinput">
+    <cform class="vertical-form" action="/auth/register" method="post" messages="#notification">
+      <input type="text" name="email" placeholder="Email" autocomplete="email" class="userinput" 
+          regex="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" msg="Email must be a valid address." autofocus>
+      <input type="text" name="username" placeholder="Username" autocomplete="username" class="userinput" 
+          regex="^\w{2,16}$" msg="Username must be 2 - 16 characters and only contain letters, numbers, and underscores.">
+      <input type="password" name="password" placeholder="Password" autocomplete="new-password" class="userinput" 
+          regex="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,64}$" msg="Password must contain a minimum of eight characters, at least one letter, and one number.">
+      <input type="password" name="password2" placeholder="Re-enter password" autocomplete="new-password" class="userinput" 
+          matches="password" msg="Passwords must match.">
       <input type="submit" value="Sign Up" class="signup">
-    </form>
+    </cform>
     <div class="notification" id="notification"></div>
     <div class="text2">Already have an account? <a href="/login/">Log In</a></div>
 </div>
-  
+<script type="text/javascript" src="/signup/script.js"></script>
 </body>
 </html>

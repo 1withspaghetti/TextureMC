@@ -24,6 +24,7 @@ public class RestExceptionHandler {
 	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleException(Exception ex) {
+		ex.printStackTrace();
 		return new ResponseEntity<Object>(new ErrorResponse("Internal Server Error, if this repeats contact support"), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 }

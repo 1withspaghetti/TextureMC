@@ -14,7 +14,7 @@ public class RegisterRequest {
 	public String username;
 	
 	@NotBlank(message="Password cannot be null")
-	@Pattern(regexp="^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]{8,}$", message="Password must contain a minimum of eight characters, at least one letter, and one number.")
+	@Pattern(regexp="^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d@$!%*#?&]{8,32}$", message="Password must contain a minimum of eight characters, at least one letter, and one number.")
 	public String password;
 	
 	@NotBlank(message="Password cannot be null")

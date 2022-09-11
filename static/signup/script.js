@@ -1,36 +1,38 @@
-function signup() {
-    if (!/^[a-zA-Z0-9_]{3,16}$/.test(document.getElementById("username").value)) {
-        notify("Invalid Username, it may only contain letters, numbers, underscores, and be 3 to 16 characters long");
-        return;
-    }
-    if (!/^[a-zA-Z0-9_@#$%^&-+=()]{5,24}$/.test(document.getElementById("password").value)) {
-        notify("Invalid Password, it may only contain letters, numbers, symbols, and be 5 to 24 characters long");
-        return;
-    }
-    if (document.getElementById("password").value != document.getElementById("password2").value) {
-        notify("Passwords must match");
-        return;
-    }
-    if (!/^[a-zA-Z0-9_@#$%^&-+=()]{5,24}$/.test(document.getElementById("betakey").value)) {
-        notify("Invalid Beta-Tester Key");
-        return;
-    }
-    asyncPOST("/auth/register", {
-        "username": document.getElementById("username").value,
-        "password": document.getElementById("password").value,
-        "betakey": document.getElementById("betakey").value
-    }, false, (res) => {
-        if (res.success == true) {
-            session_token = res.token;
-            startHeartbeat();
-            location.href = '/account';
-        } 
-        else {
-            notify(res.reason);
-        }
-    });
-}
+$('cform input[type="submit"]').on("click", evt => {
+    var form = $(evt.currentTarget).closest("cform");
 
-function notify(text) {
-    document.getElementById("notification").innerText = "⚠ " + text
-}
+    var req = {};
+
+    for (let elm of form.children("input")) {
+        var e = $(elm);
+        var v = e.val();
+        if (e.attr("regex")) {
+            if (!new RegExp(e.attr("regex")).test(v)) {
+                $(form.attr("messages") || "").text(e.attr("msg") || "Invalid Input").fadeIn(250).delay(3000).fadeOut(250);
+                return;
+            }
+        }
+        if (e.attr("matches")) {
+            var match = form.children(`[name="${e.attr("matches")}"]`);
+            if (v != match.val()) {
+                $(form.attr("messages") || "").text(e.attr("msg") || "Input does not match").fadeIn(250).delay(3000).fadeOut(250);
+                return;
+            }
+        }
+        req[e.attr("name")] = v;
+    }
+
+    $.ajax(form.attr("action") || location.href, {
+        method: form.attr("method") || "GET",
+        data: JSON.stringify(req),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+    }).done((re,h,res) => {
+        console.log("#1: ",re)
+        console.log("#2: ",h)
+        console.log("#3: ",res)
+    }).fail((res) => {
+        $(form.attr("messages") || "").text(res.responseJSON?.reason || "Unknown Server Error: "+res.statusText).fadeIn(250).delay(3000).fadeOut(250);
+    })
+    console.log("Set up form")
+})

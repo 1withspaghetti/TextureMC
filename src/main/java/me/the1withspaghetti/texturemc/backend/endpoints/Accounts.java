@@ -37,7 +37,7 @@ public class Accounts {
 	
 	@PostMapping("/register")
 	public Response register(@Validated @RequestBody RegisterRequest req, HttpServletResponse res) throws Exception {
-		if (req.password.equals(req.password2)) throw new ApiException("Passwords must match");
+		if (!req.password.equals(req.password2)) throw new ApiException("Passwords must match");
 		
 		long id = uniqueIdGenerator.generateNewId();
 		String hash = Encryption.SHA_256(req.password);
