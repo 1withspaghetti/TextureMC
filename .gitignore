@@ -5,3 +5,4 @@ static/assets/
 static/node_modules/
 *.env
 *.properties
+texturemc_accounts.db

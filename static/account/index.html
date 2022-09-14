@@ -30,7 +30,7 @@
       <h2>Texture Packs</h2>
       <div class="hseperator"></div>
       <div id="packs">
-        <div onclick=openPack(event); th:each="pack : ${texturePacks}" th:attr="id=${pack.id}">
+        <div onclick=openPack(event); th:each="pack : ${packs}" th:attr="id=${pack.id}">
           <v><span th:text="${pack.name}"></span><img src="/images/edit.svg" onclick=confirmChangePackname(event)></v>
           <v><span th:text="${pack.version}"></span><img src="/images/trash.svg" onclick=confirmDelete(event)><img src="/images/export.svg" onclick=confirmExport(event)><img src="/images/copy.svg" onclick=confirmCopy(event)></v>
         </div>

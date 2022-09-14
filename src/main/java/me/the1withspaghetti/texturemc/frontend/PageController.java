@@ -1,15 +1,18 @@
 package me.the1withspaghetti.texturemc.frontend;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
 import me.the1withspaghetti.texturemc.backend.database.AccountDB;
+import me.the1withspaghetti.texturemc.backend.database.AccountDB.Pack;
+import me.the1withspaghetti.texturemc.backend.database.AccountDB.User;
 import me.the1withspaghetti.texturemc.backend.service.SessionService;
+import me.the1withspaghetti.texturemc.backend.service.SessionService.SessionData;
 
 @Controller
 public class PageController {
@@ -47,11 +50,14 @@ public class PageController {
 			long user = AccountDB.getEmailConfirmation(id);
 			if (user != 0) {
 				AccountDB.confirmUser(id, user);
-				return "redirect: /accounts/";
+				return "redirect:/account/";
 			} else {
 				model.addAttribute("error", "Email confirmation expired, please re-send a confirmation email.");
 				return "error";
 			}
+		} catch (NumberFormatException e) {
+			model.addAttribute("error", "Invalid confirmation Id.");
+			return "error";
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -60,34 +66,33 @@ public class PageController {
 		return "error";
 	}
 	
-	/*@GetMapping("/account")
-	public ModelAndView getAccount(@CookieValue(value = "session_token", defaultValue = "") String token) {
-		Map<String, Object> model = new HashMap<String, Object>();
-		UUID userId = Accounts.checkToken(token);
-		if (userId != null) 
-			model.put("hasSession", true);
+	@GetMapping("/account")
+	public String getAccount(Model model, @CookieValue(value = "session_token", defaultValue = "") String token) {
+		SessionData session = SessionService.getSession(token);
+		if (session != null) 
+			model.addAttribute("hasSession", true);
 		else 
-			return new ModelAndView("redirect:/login");
+			return "redirect:/login/";
 		
 		try {
-			UserData data = AccountManager.getUserData(userId);
-			List<HtmlTexturePack> packList = new ArrayList<HtmlTexturePack>();
-			if (!data.packs.isEmpty()) {
-				for (String packStr: data.packs.split(":")) {
-					TexturePackMin pack = PiskelManager.getPackMin(UUID.fromString(packStr), userId);
-					packList.add(new HtmlTexturePack(pack.name, pack.version, pack._id.toUUID().toString()));
-				}
+			User user = AccountDB.getUser(session.userId);
+			
+			if (!user.verified) {
+				// TODO
 			}
-			model.put("username", data.username);
-			model.put("texturePacks", packList);
+			
+			LinkedList<Pack> packs = AccountDB.getPacks(session.userId);
+			
+			model.addAttribute("username", user.username);
+			model.addAttribute("packs", packs);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
-		return new ModelAndView("account", model);
+		return "account";
 	}
 	
-	@GetMapping("/editor")
+	/*@GetMapping("/editor")
 	public ModelAndView getEditor(@CookieValue(value = "session_token", defaultValue = "") String token, @RequestParam("pack") String packId) {
 		Map<String, Object> model = new HashMap<String, Object>();
 		UUID userId = Accounts.checkToken(token);

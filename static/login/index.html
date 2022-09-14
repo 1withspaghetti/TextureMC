@@ -10,12 +10,14 @@
   <div th:replace="/index.html :: navbar"></div>
   <div class="main">
     <div class="title">TextureMC Log In</div>
-    <div class="text">Please enter your username and password</div>
-    <form class="vertical-form" action="/login/" method="post">
-        <input type="email" name="email" placeholder="Email Address" autocomplete="email" autofocus class="userinput">
-        <input type="password" name="password" placeholder="Password" autocomplete="current-password" class="userinput">
-        <input type="submit" value="Log In" class="login">
-    </form>
+    <div class="text">Please enter your email and password</div>
+    <cform class="vertical-form" action="/auth/login" messages="#notification" success="/account">
+      <input type="text" name="email" placeholder="Email" autocomplete="email" class="userinput" 
+          regex="^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$" msg="Email must be a valid address." autofocus>
+      <input type="password" name="password" placeholder="Password" autocomplete="new-password" class="userinput" 
+          regex="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,64}$" msg="Password must contain a minimum of eight characters, at least one letter, and one number.">
+      <input type="submit" value="Log In" class="button">
+    </cform>
     <div class="notification" id="notification"></div>
     <div class="text2">Don't have an account? <a href="/signup/">Sign Up</a></div>
   </div>

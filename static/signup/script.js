@@ -23,14 +23,12 @@ $('cform input[type="submit"]').on("click", evt => {
     }
 
     $.ajax(form.attr("action") || location.href, {
-        method: form.attr("method") || "GET",
+        method: "POST",
         data: JSON.stringify(req),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
     }).done((re,h,res) => {
-        console.log("#1: ",re)
-        console.log("#2: ",h)
-        console.log("#3: ",res)
+        if (re.success && form.attr("success")) location.href = form.attr("success");
     }).fail((res) => {
         $(form.attr("messages") || "").text(res.responseJSON?.reason || "Unknown Server Error: "+res.statusText).fadeIn(250).delay(3000).fadeOut(250);
     })
