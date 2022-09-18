@@ -98,7 +98,7 @@ public class AccountDB {
 		ps.setLong(1, id);
 		ps.execute();
 		
-		ps = con.prepareStatement("UPDATE accounts SET verified = 1 WHERE id = ?");
+		ps = con.prepareStatement("UPDATE accounts SET verified = 1 WHERE id = ?;");
 		ps.setLong(1, userId);
 		ps.execute();
 	}
@@ -113,6 +113,15 @@ public class AccountDB {
 			packs.add(new AccountDB().new Pack(rs.getLong(1), rs.getString(2), rs.getString(3)));
 		}
 		return packs;
+	}
+	
+	public static void addPack(long id, long userId, String name, String version) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("INSERT INTO accounts (id, userId, name, version) VALUES(?,?,?,?);");
+		ps.setLong(1, id);
+		ps.setLong(2, userId);
+		ps.setString(3, name);
+		ps.setString(4, version);
+		ps.execute();
 	}
 	
 	

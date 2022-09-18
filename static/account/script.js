@@ -10,6 +10,8 @@ const packFormat = {
 }
 
 
+
+
 async function loadPacks() {
     asyncGET("/packs/get", true, (res) => {
         if (res.success != true) {

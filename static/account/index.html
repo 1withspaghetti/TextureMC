@@ -3,8 +3,8 @@
 <head>
   <title>Account - TextureMC</title>
   <div th:replace="/index.html :: header"></div>
-  <link rel="stylesheet" type="text/css" href="/editor/style.css">
-  <script type="text/javascript" src="/editor/script.js"></script>
+  <link rel="stylesheet" type="text/css" href="/account/style.css">
+  <script type="text/javascript" src="/account/script.js"></script>
   <script type="text/javascript" src="/lib/jszip.min.js"></script>
   <script type="text/javascript" src="/lib/FileSaver.min.js"></script>
 </head>
@@ -30,16 +30,20 @@
       <h2>Texture Packs</h2>
       <div class="hseperator"></div>
       <div id="packs">
-        <div onclick=openPack(event); th:each="pack : ${packs}" th:attr="id=${pack.id}">
+        <!--<div onclick=openPack(event); th:each="pack : ${packs}" th:attr="id=${pack.id}">
           <v><span th:text="${pack.name}"></span><img src="/images/edit.svg" onclick=confirmChangePackname(event)></v>
           <v><span th:text="${pack.version}"></span><img src="/images/trash.svg" onclick=confirmDelete(event)><img src="/images/export.svg" onclick=confirmExport(event)><img src="/images/copy.svg" onclick=confirmCopy(event)></v>
+        </div>-->
+        <div data-pack="123" class="pack">
+          <div class="pack-row"><span class="pack-name">My Epic Pack</span><img class="pack-settings" src="/account/imgs/set.svg"></div>
+          <div class="pack-row">1.19.2 - 114 files</div>
         </div>
       </div>
-      <div style="display: none;" th:if="${#lists.isEmpty(texturePacks)}">You don't have any packs yet<br>Click the button below to get started!</div><br>
-      <div th:if="${#lists.size(texturePacks) < 5}">
+      <div style="display: none;" th:if="${#lists.isEmpty(packs)}">You don't have any packs yet<br>Click the button below to get started!</div><br>
+      <div>
         <label class="importpack newpack" onclick="openPopup('createpack');document.getElementById('createPackNotification').innerText = ''">&#10133; New Texture Pack</label>
-        <label for="importPackFile" class="importpack">Import File</label>
-        <input type="file" class="hidden" id="importPackFile" accept=".zip" onchange="confirmImportPack()">
+        <!--<label for="importPackFile" class="importpack">Import File</label>
+        <input type="file" class="hidden" id="importPackFile" accept=".zip" onchange="confirmImportPack()">-->
       </div>
     </div>
   </div>

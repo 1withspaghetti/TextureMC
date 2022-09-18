@@ -10,10 +10,8 @@ body {
     border-radius: 5px;
     display: flex;
     flex-direction: row;
-    align-items: center;
     padding: 2rem;
     margin-top: 100px;
-    max-width: 50%;
     color: var(--main-text-color);
     align-self: center;
 }
@@ -23,17 +21,8 @@ body {
     margin: 1rem;
 }
 
-.infolist img {
-    width: 5rem;
-    margin-bottom: 0.3rem;
-}
-
 .infolist h2 {
     margin: 0;
-}
-
-.infolist h3 {
-    margin: 0rem;
 }
 
 .linkbtn {
@@ -86,41 +75,38 @@ body {
     margin-bottom: 0.7rem;
 }
 
-#packs div {
+.pack {
     background-color: var(--item-bg-color);
     border: 5px solid var(--main-outline-color);
     border-radius: 5px;
-    padding: 0.7rem;
-    margin: 0.3rem;
+    padding: 10px 5px 10px 15px;
+    margin: 10px;
     font-size: 1rem;
-    font-weight: bold;
+    font-weight: 500;
     cursor: pointer;
     width: 18rem;
 }
 
-#packs div v {
+.pack-name {
+    font-weight: bold;
+    color: var(--main-text-color);
+}
+
+.pack-row {
     display: block;
     color: var(--secondary-selection-color);
     text-align: left;
     width: 100%;
-    padding: 0.1rem;
 }
 
-#packs div v:first-of-type {
-    color: var(--main-text-color);
-    border-bottom: solid 3px var(--main-outline-color);
-}
-
-#packs div v img {
-    width: 1.1rem;
+.pack-settings {
+    height: 25px;
     float: right;
-    padding: 0.1rem;
     opacity: 0.4;
     cursor: pointer;
-    margin: 0;
 }
 
-#packs div v img:hover {
+.pack-settings:hover {
     opacity: 1;
 }
 

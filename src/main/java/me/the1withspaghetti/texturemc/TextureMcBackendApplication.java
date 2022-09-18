@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfigurat
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 
 import me.the1withspaghetti.texturemc.backend.database.AccountDB;
+import me.the1withspaghetti.texturemc.backend.database.PackDB;
 import me.the1withspaghetti.texturemc.backend.service.MailService;
 import me.the1withspaghetti.texturemc.backend.util.ConsoleCommands;
 import me.the1withspaghetti.texturemc.backend.util.VersionControl;
@@ -18,6 +19,7 @@ public class TextureMcBackendApplication {
 
 	public static void main(String[] args) throws SQLException, IOException {
 		AccountDB.connect();
+		PackDB.init();
 		MailService.init();
 		VersionControl.init();
 		ConsoleCommands.init(System.in);

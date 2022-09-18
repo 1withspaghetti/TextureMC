@@ -52,8 +52,8 @@ public class Accounts {
 		
 		UUID session = SessionService.newSession(id);
 		Cookie token = new Cookie("session_token", session.toString());
-		token.setSecure(true);
-		token.setPath("/*");
+		token.setSecure(false);
+		token.setPath("/");
 		token.setMaxAge((int) TimeUnit.HOURS.toSeconds(1));
 		res.addCookie(token);
 		return new Response(true);
@@ -68,8 +68,8 @@ public class Accounts {
 		
 		UUID session = SessionService.newSession(user.id);
 		Cookie token = new Cookie("session_token", session.toString());
-		token.setSecure(true);
-		token.setPath("/*");
+		token.setSecure(false);
+		token.setPath("/");
 		token.setMaxAge((int) TimeUnit.HOURS.toSeconds(1));
 		res.addCookie(token);
 		return new Response(true);
