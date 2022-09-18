@@ -1,5 +1,7 @@
-$('cform input[type="submit"]').on("click", evt => {
-    var form = $(evt.currentTarget).closest("cform");
+$('form').on("submit", (e)=>{
+    e.preventDefault()
+    e.stopPropagation()
+    var form = $(e.currentTarget);
 
     var req = {};
 
@@ -32,5 +34,4 @@ $('cform input[type="submit"]').on("click", evt => {
     }).fail((res) => {
         $(form.attr("messages") || "").text(res.responseJSON?.reason || "Unknown Server Error: "+res.statusText).fadeIn(250).delay(3000).fadeOut(250);
     })
-    console.log("Set up form")
 })

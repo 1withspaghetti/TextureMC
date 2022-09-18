@@ -110,12 +110,51 @@ body {
     opacity: 1;
 }
 
+.pack-context {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--secondary-bg-color);
+    border: 3px solid var(--main-outline-color);
+    border-radius: 5px;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.pack-context-item {
+    width: 100%;
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    text-decoration: unset;
+    color: var(--main-text-color);
+}
+
+.pack-context-item > i.fa {
+    margin-right: 10px;
+}
+
+.pack-context-item:hover {
+    cursor: pointer;
+    color: var(--main-selection-color);
+    background-color: var(--item-bg-color);
+}
+
+.pack-context-item.red {
+    color: #fd5b5b;
+}
+
+.pack-context-item.red:hover {
+    color: #ff0000;
+}
+
 .userinput {
-  background-color: var(--secondary-bg-color);
-  border: 5px solid var(--main-outline-color);
-  color: var(--main-text-color);
-  font-size: larger;
-  margin-top: 10px;
+    background-color: var(--secondary-bg-color);
+    border: 5px solid var(--main-outline-color);
+    color: var(--main-text-color);
+    font-size: larger;
+    margin-top: 10px;
 }
 
 .userinput:focus {
@@ -155,15 +194,15 @@ label.fileinput {
     box-shadow: 1px 1px 4px black;
 }
 
-.newpack {
+.importpack.green {
     background-color: #00fa70;
 }
 
-.newpack:hover {
+.importpack.green:hover {
     background-color: #01e769;
 }
 
-.popup {
+.modal-bg {
     background: rgba(100, 100, 100, 0.5);
     color: var(--main-text-color);
     display: none;
@@ -175,7 +214,7 @@ label.fileinput {
     top: 0;
   }
 
-.popup > div {
+  .modal {
     background: var(--secondary-bg-color);
     max-width: 40%;
     position: fixed;
@@ -192,7 +231,7 @@ label.fileinput {
     box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, 0.4);
   }
 
-.popbtn {
+.btn {
     background-color: var(--secondary-bg-color);
     border: 5px solid var(--main-outline-color);
     border-radius: 5px;
@@ -205,19 +244,19 @@ label.fileinput {
     color: var(--main-text-color);
 }
 
-.popbtn:hover {
+.btn:hover {
     background-color: var(--item-bg-color);
 }
 
-.primarybtn {
+.btn.primary {
     background-color: var(--main-outline-color);
 }
 
-.primarybtn:hover {
+.btn.primary:hover {
     background-color: var(--secondary-outline-color);
 }
 
-.popfooter {
+.modal-footer {
     color: var(--secondary-selection-color);
     font-size: 0.8rem;
     margin-top: 1rem;

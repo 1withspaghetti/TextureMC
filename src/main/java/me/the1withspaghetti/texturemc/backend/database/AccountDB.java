@@ -104,9 +104,9 @@ public class AccountDB {
 	}
 	
 	public static LinkedList<Pack> getPacks(long userId) throws SQLException {
-		PreparedStatement ps = con.prepareStatement("SELECT (id, name, version) FROM packs WHERE userId = ?;");
+		PreparedStatement ps = con.prepareStatement("SELECT id, name, version FROM packs WHERE userId = ?;");
 		ps.setLong(1, userId);
-		
+		 
 		ResultSet rs = ps.executeQuery();
 		LinkedList<Pack> packs = new LinkedList<>();
 		while (rs.next()) {

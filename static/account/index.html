@@ -3,8 +3,8 @@
 <head>
   <title>Account - TextureMC</title>
   <div th:replace="/index.html :: header"></div>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/account/style.css">
-  <script type="text/javascript" src="/account/script.js"></script>
   <script type="text/javascript" src="/lib/jszip.min.js"></script>
   <script type="text/javascript" src="/lib/FileSaver.min.js"></script>
 </head>
@@ -35,20 +35,26 @@
           <v><span th:text="${pack.version}"></span><img src="/images/trash.svg" onclick=confirmDelete(event)><img src="/images/export.svg" onclick=confirmExport(event)><img src="/images/copy.svg" onclick=confirmCopy(event)></v>
         </div>-->
         <div data-pack="123" class="pack">
-          <div class="pack-row"><span class="pack-name">My Epic Pack</span><img class="pack-settings" src="/account/imgs/set.svg"></div>
+          <div class="pack-row"><span class="pack-name">My Epic Pack</span><img class="pack-settings" data-pack="123" src="/account/imgs/set.svg"></div>
           <div class="pack-row">1.19.2 - 114 files</div>
         </div>
       </div>
-      <div style="display: none;" th:if="${#lists.isEmpty(packs)}">You don't have any packs yet<br>Click the button below to get started!</div><br>
+      <div id="packs-empty" th:class="'display '+${#lists.isEmpty(packs) ? 'none' : 'block'}">You don't have any packs yet<br>Click the button below to get started!</div><br>
       <div>
-        <label class="importpack newpack" onclick="openPopup('createpack');document.getElementById('createPackNotification').innerText = ''">&#10133; New Texture Pack</label>
+        <label class="importpack green" open-modal="new-pack">&#10133; New Texture Pack</label>
         <!--<label for="importPackFile" class="importpack">Import File</label>
         <input type="file" class="hidden" id="importPackFile" accept=".zip" onchange="confirmImportPack()">-->
       </div>
     </div>
   </div>
-  <div class="popup" id="popupbg" onclick="if (event.target.id == 'popupbg') closeAll(event);">
-    <div id="createpack">
+  <div class="pack-context" id="pack_context_menu" style="display: none;">
+    <a class="pack-context-item" open-modal="rename-pack"><i class="fa fa-pencil"></i>Rename</a>
+    <a class="pack-context-item" open-modal="download-pack"><i class="fa fa-download"></i>Download</a>
+    <a class="pack-context-item" open-modal="duplicate-pack"><i class="fa fa-copy"></i>Duplicate</a>
+    <a class="pack-context-item red" open-modal="delete-pack"><i class="fa fa-trash"></i>Delete</a>
+  </div>
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal" modal="new-pack">
       <h2>Create a new Texture Pack</h2>
 	    <p>Give your new pack a name and select a minecraft version!</p>
       <div class="hdisplay">
@@ -68,48 +74,10 @@
         </select>
       </div>
       <div class="notification" id="createPackNotification"></div>
-      <button class="popbtn" onclick="closePopup('createpack')">Cancel</button>
-      <button class="popbtn primarybtn" onclick="createPack();">Create Pack</button>
+      <button class="btn" modal-close>Cancel</button>
+      <input type="submit" class="btn primary" value="Create New Pack">
     </div>
-    <div id="changeUsernamePopup">
-      <h2>Change your Username</h2>
-      <p>Usernames may only contain letters, numbers,<br> underscores, and be 3 to 16 characters long.</p>
-      <div class="hdisplay">
-        <input class="textInput" type="text" id="newUsername" placeholder="New Username" autocomplete="off">
-      </div>
-      <div class="notification" id="changeUsernameNotification"></div>
-      <button class="popbtn" onclick="closePopup('changeUsernamePopup')">Cancel</button>
-      <button class="popbtn primarybtn" onclick="changeUsername();">Change Username</button>
-      <div class="popfooter">You must use the new username to log in after changing it</div>
-    </div>
-    <div id="changePacknamePopup">
-      <h2>Change Texturepack Name</h2>
-      <p>Usernames must be 3 to 16 characters long.</p>
-      <div class="hdisplay">
-        <input class="textInput" type="text" id="newPackname" placeholder="New Texturepack name" autocomplete="off">
-      </div>
-      <div class="notification" id="changePacknameNotification"></div>
-      <button class="popbtn" onclick="closePopup('changePacknamePopup')">Cancel</button>
-      <button class="popbtn primarybtn" onclick="changePackname();">Change Name</button>
-      <div class="popfooter">PackID: <i id="confirmPacknameId"></i></div>
-    </div>
-    <div id="confirmDelete">
-      <h2>Confirm Delete</h2>
-	    <p>Are you sure you would like to delete the pack <b id="confirmDeleteName"></b>?</p>
-      <div class="notification">This cannot be undone!</div>
-      <button class="popbtn" onclick="closePopup('confirmDelete')">Cancel</button>
-      <button class="popbtn primarybtn" onclick="deletePack();">Delete Pack</button>
-      <div class="popfooter">PackID: <i id="confirmDeleteId"></i></div>
-    </div>
-    <div id="confirmExport">
-      <h2>Export Texture Pack</h2>
-	    <p>Click the button below to download the pack <b id="confirmExportName"></b></p>
-      <div class="notification" id="confirmExportNotification"></div>
-      <button class="popbtn" onclick="closePopup('confirmExport')">Cancel</button>
-      <button class="popbtn primarybtn" onclick="exportPack();">Download Zip</button>
-      <div class="popfooter">PackID: <i id="confirmExportId"></i></div>
-    </div>
-    <div id="confirmImport">
+    <div class="modal" modal="import-pack">
       <h2>Import Texture Pack</h2>
 	    <p>Please select a texture pack file to import</p>
       <div class="fileinfo">
@@ -118,36 +86,70 @@
         <span id="importPackDesc"></span>
       </div>
       <div class="notification" id="confirmImportNotification"></div>
-      <button class="popbtn" onclick="closePopup('confirmImport')">Cancel</button>
-      <button class="popbtn primarybtn" onclick="importPack();">Import Pack</button>
+      <button class="btn" modal-close>Cancel</button>
+      <input type="submit" class="btn primary" value="Import Pack">
     </div>
-    <div id="confirmCopy">
+    <div class="modal" modal="rename-pack">
+      <h2>Change Texturepack Name</h2>
+      <p>Usernames must be 3 to 16 characters long.</p>
+      <div class="hdisplay">
+        <input class="textInput" type="text" id="newPackname" placeholder="New Texturepack name" autocomplete="off">
+      </div>
+      <div class="notification" id="changePacknameNotification"></div>
+      <button class="btn" modal-close>Cancel</button>
+      <input type="submit" class="btn primary" value="Rename Pack">
+    </div>
+    <div class="modal" modal="duplicate-pack">
       <h2>Copy Texture Pack</h2>
 	    <p>Click the button below to create a copy of the pack <b id="confirmCopyName"></b></p>
       <div class="notification" id="confirmCopyNotification"></div>
-      <button class="popbtn" onclick="closePopup('confirmExport')">Cancel</button>
-      <button class="popbtn primarybtn" onclick="copyPack();">Copy</button>
-      <div class="popfooter">PackID: <i id="confirmCopyId"></i></div>
+      <button class="btn" modal-close>Cancel</button>
+      <input type="submit" class="btn primary" value="Duplicate">
     </div>
-    <div id="changePasswordPopup">
+    <div class="modal" modal="download-pack">
+      <h2>Export Texture Pack</h2>
+	    <p>Click the button below to download the pack <b id="confirmExportName"></b></p>
+      <div class="notification" id="confirmExportNotification"></div>
+      <button class="btn" modal-close>Cancel</button>
+      <input type="submit" class="btn primary" value="Download">
+    </div>
+    <div class="modal" modal="delete-pack">
+      <h2>Confirm Delete</h2>
+	    <p>Are you sure you would like to delete the pack <b id="confirmDeleteName"></b>?</p>
+      <div class="notification">This cannot be undone!</div>
+      <button class="btn" modal-close>Cancel</button>
+      <input type="submit" class="btn primary" value="Delete Pack">
+    </div>
+    <div class="modal" modal="rename-user">
+      <h2>Change your Username</h2>
+      <p>Usernames may only contain letters, numbers,<br> underscores, and be 3 to 16 characters long.</p>
+      <div class="hdisplay">
+        <input class="textInput" type="text" id="newUsername" placeholder="New Username" autocomplete="off">
+      </div>
+      <div class="notification" id="changeUsernameNotification"></div>
+      <button class="btn" modal-close>Cancel</button>
+      <input type="submit" class="btn primary" value="Update Username">
+    </div>
+    <div class="modal" modal="change-password">
       <h2>Change your Password</h2>
       <p>You must use the new password to log in after changing it.</p>
       <input class="textInput" type="password" id="oldPassword" placeholder="Old Password" autocomplete="current-password">
       <input class="textInput" type="password" id="newPassword" placeholder="New Password" autocomplete="new-password">
       <div class="notification" id="changePasswordNotification"></div>
-      <button class="popbtn" onclick="closePopup('changePasswordPopup')">Cancel</button>
-      <button class="popbtn primarybtn" onclick="changePassword();">Change Password</button>
+      <div class="btn" modal-close>Cancel</div>
+      <input type="submit" class="btn primary" value="Change Password">
     </div>
-    <div id="delUserPopup">
+    <div class="modal" modal="delete-user">
       <h2>Delete your Account</h2>
       <p>Please enter your password to continue</p>
       <div class="hdisplay">
         <input class="textInput" type="password" id="delUserPassword" placeholder="Enter your Password" autocomplete="current-password">
       </div>
       <div class="notification" id="delUserNotification">This CANNOT be undone!</div>
-      <button class="popbtn" onclick="closePopup('delUserPopup')">Cancel</button>
-      <button class="popbtn primarybtn" onclick="delUser();">Delete Account</button>
+      <button class="btn" modal-close>Cancel</button>
+      <input type="submit" class="btn primary" value="Delete Account">
     </div>
   </div>
+  <script type="text/javascript" src="/account/script.js"></script>
 </body>
 </html>

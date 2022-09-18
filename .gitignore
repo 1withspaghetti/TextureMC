@@ -6,4 +6,4 @@ static/node_modules/
 *.env
 *.properties
 texturemc_accounts.db
-src/main/resources/SendGrid.secret
+*.secret

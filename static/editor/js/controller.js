@@ -28,7 +28,7 @@
         $(".tool.selected").removeClass("selected");
         this.classList.add("selected");
         if (this.hasAttribute("data-cursor")) {
-            canvas.camera.css("cursor", `url(${this.getAttribute("data-cursor")}) 0 16, crosshair`);
+            canvas.camera.css("cursor", `url(${this.getAttribute("data-cursor")}) 0 16, default`);
         }
         else {
             canvas.camera.css("cursor", "auto");
