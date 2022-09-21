@@ -3,21 +3,23 @@ $('form').on("submit", (e)=>{
     e.stopPropagation()
     var form = $(e.currentTarget);
 
+    var messages = $(form.attr("messages") || "").pushStack(form.children("[messages]"));
+
     var req = {};
 
-    for (let elm of form.children("input")) {
+    for (let elm of form.children("input").filter(':not([type="submit"])')) {
         var e = $(elm);
         var v = e.val();
         if (e.attr("regex")) {
             if (!new RegExp(e.attr("regex")).test(v)) {
-                $(form.attr("messages") || "").text(e.attr("msg") || "Invalid Input").fadeIn(250).delay(3000).fadeOut(250);
+                messages.text(e.attr("msg") || "Invalid Input").fadeIn(250).delay(3000).fadeOut(250);
                 return;
             }
         }
         if (e.attr("matches")) {
             var match = form.children(`[name="${e.attr("matches")}"]`);
             if (v != match.val()) {
-                $(form.attr("messages") || "").text(e.attr("msg") || "Input does not match").fadeIn(250).delay(3000).fadeOut(250);
+                messages.text(e.attr("msg") || "Input does not match").fadeIn(250).delay(3000).fadeOut(250);
                 return;
             }
         }
@@ -31,7 +33,10 @@ $('form').on("submit", (e)=>{
         dataType: "json",
     }).done((re,h,res) => {
         if (re.success && form.attr("success")) location.href = form.attr("success");
+        else if (res.success) {
+            messages.text(res.reason || "Unknown Error");
+        }
     }).fail((res) => {
-        $(form.attr("messages") || "").text(res.responseJSON?.reason || "Unknown Server Error: "+res.statusText).fadeIn(250).delay(3000).fadeOut(250);
+        messages.text(res.responseJSON?.reason || "Unknown Server Error: "+res.status).fadeIn(250).delay(3000).fadeOut(250);
     })
 })
