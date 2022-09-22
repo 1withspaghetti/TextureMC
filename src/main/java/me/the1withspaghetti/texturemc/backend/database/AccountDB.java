@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class AccountDB {
 	
@@ -103,25 +105,77 @@ public class AccountDB {
 		ps.execute();
 	}
 	
+	/*  Pack-related Requests  */
+	
+	public static Pack getPack(long id, long userId) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("SELECT id, userId, name, version FROM packs WHERE id = ? AND userId = ?;");
+		ps.setLong(1, id);
+		
+		ResultSet rs = ps.executeQuery();
+		if (!rs.next()) return null;
+		
+		return new AccountDB().new Pack(rs.getLong(1), rs.getLong(2), rs.getString(3), rs.getString(4));
+	}
+	
 	public static LinkedList<Pack> getPacks(long userId) throws SQLException {
-		PreparedStatement ps = con.prepareStatement("SELECT id, name, version FROM packs WHERE userId = ?;");
+		PreparedStatement ps = con.prepareStatement("SELECT id, userId, name, version FROM packs WHERE userId = ?;");
 		ps.setLong(1, userId);
 		 
 		ResultSet rs = ps.executeQuery();
 		LinkedList<Pack> packs = new LinkedList<>();
 		while (rs.next()) {
-			packs.add(new AccountDB().new Pack(rs.getLong(1), rs.getString(2), rs.getString(3)));
+			packs.add(new AccountDB().new Pack(rs.getLong(1), rs.getLong(2), rs.getString(3), rs.getString(4)));
 		}
 		return packs;
 	}
 	
 	public static void addPack(long id, long userId, String name, String version) throws SQLException {
-		PreparedStatement ps = con.prepareStatement("INSERT INTO accounts (id, userId, name, version) VALUES(?,?,?,?);");
+		PreparedStatement ps = con.prepareStatement("INSERT INTO packs (id, userId, name, version) VALUES(?,?,?,?);");
 		ps.setLong(1, id);
 		ps.setLong(2, userId);
 		ps.setString(3, name);
 		ps.setString(4, version);
 		ps.execute();
+	}
+	
+	public static boolean renamePack(long id, long userId, String name) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("UPDATE packs SET name = ? WHERE id = ? AND userId = ?;");
+		ps.setString(1, name);
+		ps.setLong(2, id);
+		ps.setLong(3, userId);
+		return ps.executeUpdate() > 0;
+	}
+	
+	public static boolean duplicatePack(long oldId, long userId, long newId) throws SQLException {
+		Pack pack = getPack(oldId, userId);
+		if (pack == null) return false;
+		if (pack.userId != userId) return false;
+		
+		PreparedStatement ps = con.prepareStatement("INSERT INTO packs (id, userId, name, version) VALUES(?,?,?,?);");
+		ps.setLong(1, newId);
+		ps.setLong(2, userId);
+		ps.setString(3, incrementName(pack.name));
+		ps.setString(4, pack.version);
+		
+		return ps.executeUpdate() > 0;
+	}
+	
+	public static boolean deletePack(long id, long userId) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("DELETE FROM packs WHERE id = ? AND userId = ?;");
+		ps.setLong(1, id);
+		ps.setLong(2, userId);
+		
+		return ps.executeUpdate() > 0;
+	}
+	
+	private static String incrementName(String name) {
+		Pattern p = Pattern.compile("[0-9]{1}$");
+		Matcher m = p.matcher(name);
+		if (m.matches()) {
+			return m.replaceFirst(String.valueOf(Integer.parseInt(m.group()) + 1));
+		} else {
+			return name + " 2";
+		}
 	}
 	
 	
@@ -143,11 +197,13 @@ public class AccountDB {
 	
 	public class Pack {
 		public long id;
+		public long userId;
 		public String name;
 		public String version;
 		
-		public Pack(long id, String name, String version) {
+		public Pack(long id, long userId, String name, String version) {
 			this.id = id;
+			this.id = userId;
 			this.name = name;
 			this.version = version;
 		}

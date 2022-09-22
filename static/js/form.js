@@ -2,12 +2,14 @@ $('form').on("submit", (e)=>{
     e.preventDefault()
     e.stopPropagation()
     var form = $(e.currentTarget);
+    console.log(form);
+    console.log(form.children(`input:not(*[type="submit"])`).add("select"))
 
     var messages = $(form.attr("messages") || "").add(form.children("[messages]"));
 
     var req = {};
 
-    for (let elm of form.children("input").filter(':not([type="submit"])')) {
+    for (let elm of form.children(`input:not(*[type="submit"])`).add("select")) {
         var e = $(elm);
         var v = e.val();
         if (e.attr("regex")) {
