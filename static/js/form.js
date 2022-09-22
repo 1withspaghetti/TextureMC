@@ -38,5 +38,5 @@ $('form').on("submit", (e)=>{
         }
     }).fail((res) => {
         messages.text(res.responseJSON?.reason || "Unknown Server Error: "+res.status).fadeIn(250).delay(3000).fadeOut(250);
-    })
+    });
 })
