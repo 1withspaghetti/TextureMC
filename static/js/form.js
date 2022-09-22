@@ -3,7 +3,7 @@ $('form').on("submit", (e)=>{
     e.stopPropagation()
     var form = $(e.currentTarget);
 
-    var messages = $(form.attr("messages") || "").pushStack(form.children("[messages]"));
+    var messages = $(form.attr("messages") || "").add(form.children("[messages]"));
 
     var req = {};
 
@@ -34,7 +34,7 @@ $('form').on("submit", (e)=>{
     }).done((re,h,res) => {
         if (re.success && form.attr("success")) location.href = form.attr("success");
         else if (res.success) {
-            messages.text(res.reason || "Unknown Error");
+            messages.text(res.reason || "Unknown Error").fadeIn(250).delay(3000).fadeOut(250);
         }
     }).fail((res) => {
         messages.text(res.responseJSON?.reason || "Unknown Server Error: "+res.status).fadeIn(250).delay(3000).fadeOut(250);

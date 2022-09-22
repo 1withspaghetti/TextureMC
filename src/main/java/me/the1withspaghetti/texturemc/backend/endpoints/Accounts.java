@@ -1,6 +1,6 @@
 package me.the1withspaghetti.texturemc.backend.endpoints;
 
-import java.util.Random;
+import java.security.SecureRandom;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -35,7 +35,7 @@ import me.the1withspaghetti.texturemc.backend.util.UniqueIdGenerator;
 public class Accounts {
 	
 	UniqueIdGenerator uniqueIdGenerator = new UniqueIdGenerator();
-	Random rand = new Random(System.currentTimeMillis() | 0x2e81f6);
+	SecureRandom rand = new SecureRandom();
 	
 	@PostMapping("/register")
 	public Response register(@Validated @RequestBody RegisterRequest req, HttpServletResponse res) throws Exception {
