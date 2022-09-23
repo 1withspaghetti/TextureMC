@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import me.the1withspaghetti.texturemc.backend.database.AccountDB;
 import me.the1withspaghetti.texturemc.backend.database.AccountDB.Pack;
 import me.the1withspaghetti.texturemc.backend.database.AccountDB.User;
+import me.the1withspaghetti.texturemc.backend.endpoints.Packs;
 import me.the1withspaghetti.texturemc.backend.service.SessionService;
 import me.the1withspaghetti.texturemc.backend.service.SessionService.SessionData;
 
@@ -85,6 +86,7 @@ public class PageController {
 			
 			model.addAttribute("username", user.username);
 			model.addAttribute("packs", packs);
+			model.addAttribute("isMax", packs.size() >= Packs.MAX_PACKS);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

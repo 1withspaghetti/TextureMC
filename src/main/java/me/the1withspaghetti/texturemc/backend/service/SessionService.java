@@ -37,6 +37,10 @@ public class SessionService {
 		
 	}
 	
+	public static void removeSession(UUID id) {
+		sessions.remove(id);
+	}
+	
 	public static void purgeSessions() {
 		Iterator<Entry<UUID, SessionData>> it = sessions.entrySet().iterator();
 		while (it.hasNext()) {

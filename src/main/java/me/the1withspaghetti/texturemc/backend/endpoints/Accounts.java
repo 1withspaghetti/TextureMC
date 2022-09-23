@@ -1,6 +1,7 @@
 package me.the1withspaghetti.texturemc.backend.endpoints;
 
 import java.security.SecureRandom;
+import java.sql.SQLException;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -22,9 +23,11 @@ import me.the1withspaghetti.texturemc.backend.database.AccountDB.User;
 import me.the1withspaghetti.texturemc.backend.endpoints.clientbound.Response;
 import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.LoginRequest;
 import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.RegisterRequest;
+import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.RenameUserRequest;
 import me.the1withspaghetti.texturemc.backend.exception.ApiException;
 import me.the1withspaghetti.texturemc.backend.service.MailService;
 import me.the1withspaghetti.texturemc.backend.service.SessionService;
+import me.the1withspaghetti.texturemc.backend.service.SessionService.SessionData;
 import me.the1withspaghetti.texturemc.backend.util.Encryption;
 import me.the1withspaghetti.texturemc.backend.util.UniqueIdGenerator;
 
@@ -75,7 +78,7 @@ public class Accounts {
 		return new Response(true);
 	}
 	
-	@GetMapping("heartbeat")
+	@GetMapping("/heartbeat")
 	public Response heartbeat(@CookieValue(value = "session_token", defaultValue = "") String token) {
 		UUID session = SessionService.getUUID(token);
 		if (session == null) throw new ApiException("Invalid Session");
@@ -83,4 +86,28 @@ public class Accounts {
 		return new Response(true);
 	}
 	
+	@GetMapping("/logout")
+	public Response logout(@CookieValue(value = "session_token", defaultValue = "") String token) {
+		UUID sessionId = SessionService.getUUID(token);
+		SessionService.removeSession(sessionId);
+		return new Response(true);
+	}
+	
+	@GetMapping("/rename")
+	public Response rename(@CookieValue(value = "session_token", defaultValue = "") String token, @Validated @RequestBody RenameUserRequest req) throws SQLException {
+		SessionData session = SessionService.getSession(token);
+		if (session == null) throw new ApiException("Invalid Session");
+		
+		AccountDB.renameUser(session.userId, req.username);
+		return new Response(true);
+	}
+	
+	@GetMapping("/delete")
+	public Response delete(@CookieValue(value = "session_token", defaultValue = "") String token, @Validated @RequestBody RenameUserRequest req) throws SQLException {
+		SessionData session = SessionService.getSession(token);
+		if (session == null) throw new ApiException("Invalid Session");
+		
+		// TODO delete user in DB
+		return new Response(true);
+	}
 }

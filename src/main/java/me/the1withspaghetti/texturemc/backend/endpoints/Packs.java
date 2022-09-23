@@ -1,6 +1,7 @@
 package me.the1withspaghetti.texturemc.backend.endpoints;
 
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.Random;
 
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import me.the1withspaghetti.texturemc.backend.database.AccountDB;
+import me.the1withspaghetti.texturemc.backend.database.AccountDB.Pack;
 import me.the1withspaghetti.texturemc.backend.database.PackDB;
 import me.the1withspaghetti.texturemc.backend.endpoints.clientbound.PackListResponse;
 import me.the1withspaghetti.texturemc.backend.endpoints.clientbound.Response;
@@ -30,13 +32,16 @@ import me.the1withspaghetti.texturemc.backend.service.SessionService.SessionData
 @CrossOrigin(origins = "*", methods= {RequestMethod.POST, RequestMethod.GET}, allowedHeaders= {"x-session-token","content-type"})
 public class Packs {
 	
+	public static final int MAX_PACKS = 5;
+	
 	static Random rand = new Random();
 	
 	@GetMapping("/list")
 	public static Response listPacks(@CookieValue(value = "session_token", defaultValue = "") String token) throws SQLException {
 		SessionData session = SessionService.getSession(token);
 		if (session == null) throw new ApiException("Invalid Session");
-		return new PackListResponse(AccountDB.getPacks(session.userId));
+		LinkedList<Pack> list = AccountDB.getPacks(session.userId);
+		return new PackListResponse(list, list.size() >= MAX_PACKS);
 	}
 	
 	@PostMapping("/create")

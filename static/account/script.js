@@ -33,14 +33,28 @@ $(".pack-settings").on("click", e => {
         currentPackName = "";
     }
 });
-$("#logout").on("click", e => {
-    document.cookie = "session_token=null;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;";
-    location.href = "/";
+$("form").on("done", (e) => {
+    $("#modal-bg").hide();
+    $("[modal]").hide();
 });
-$(this).on("load-packs", () => {
+$("form.refresh-packs-on-complete").on("done", (e) => {
+    refreshPacks();
+});
+$("#logout").on("click", e => {
+    $.ajax("/auth/logout").done(res => {
+        if (res.success) {
+            document.cookie = "session_token=null;expires=Thu, 01 Jan 1970 00:00:01 GMT;path=/;";
+            location.href = "/";
+        }
+    });
+});
+function refreshPacks() {
     $.ajax("/packs/list", { dataType: "json" }).done((res) => {
         for (let pack of res.packs) {
-            $("#packs").append(`<div data-pack="${pack.id}"><v>"+pack.name+"<img src="images/edit.svg" onclick="confirmChangePackname(event)"></v><v>"+pack.version+"<img src="images/trash.svg" onclick="confirmDelete(event)"><img src="images/export.svg\" onclick="confirmExport(event)"><img src="images/copy.svg" onclick="confirmCopy(event)"></v></div>`);
+            $("#packs").append(`<div class="pack" data-pack="${pack.id}" data-pack-name="${pack.name}">
+                <div class="pack-row"><span class="pack-name">${pack.name}</span><img class="pack-settings" src="/account/imgs/set.svg"></div>
+                <div class="pack-row">${pack.version}</div>
+            </div>`);
         }
         if (res.packs.length == 0) {
             $("#packs_empty").show();
@@ -49,4 +63,4 @@ $(this).on("load-packs", () => {
             $("#packs_empty").hide();
         }
     });
-});
+}

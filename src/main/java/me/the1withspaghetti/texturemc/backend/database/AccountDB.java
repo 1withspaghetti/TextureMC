@@ -77,6 +77,13 @@ public class AccountDB {
 		return new AccountDB().new User(rs.getLong(1), rs.getString(2), rs.getString(3), rs.getString(4), rs.getBoolean(5));
 	}
 	
+	public static void renameUser(long id, String name) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("UPDATE accounts SET username = ? WHERE id = ?;");
+		ps.setString(1, name);
+		ps.setLong(2, id);
+		ps.execute();
+	}
+	
 	public static void createVerificationRequest(long id, long userId, long sent) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("INSERT INTO verification (id, userId, sent) VALUES(?,?,?);");
 		ps.setLong(1, id);

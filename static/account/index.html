@@ -35,8 +35,8 @@
           <div class="pack-row" th:text="${pack.version}">1.19.2</div>
         </div>
       </div>
-      <div id="packs-empty" th:class="'display '+${#lists.isEmpty(packs)} ? 'none' : 'block'">You don't have any packs yet<br>Click the button below to get started!</div><br>
-      <div>
+      <div id="packs-empty" th:style="${#lists.isEmpty(packs) ? 'display:block' : 'display:none'}">You don't have any packs yet<br>Click the button below to get started!</div><br>
+      <div th:style="${!isMax ? 'display:block' : 'display:none'}">
         <label class="importpack green" open-modal="new-pack">&#10133; New Texture Pack</label>
         <!--<label for="importPackFile" class="importpack">Import File</label>
         <input type="file" class="hidden" id="importPackFile" accept=".zip" onchange="confirmImportPack()">-->
@@ -50,7 +50,7 @@
     <a class="pack-context-item red" open-modal="delete-pack"><i class="fa fa-trash"></i>Delete</a>
   </div>
   <div class="modal-bg" id="modal-bg">
-    <form class="modal" modal="new-pack" action="/packs/create">
+    <form class="modal refresh-packs-on-complete" modal="new-pack" action="/packs/create">
       <h2>Create a new Texture Pack</h2>
 	    <p>Give your new pack a name and select a minecraft version!</p>
       <div class="hdisplay">
@@ -95,7 +95,7 @@
       <div class="btn primary">Download</div>
     </div>
 
-    <form class="modal" modal="rename-pack" action="/packs/rename">
+    <form class="modal refresh-packs-on-complete" modal="rename-pack" action="/packs/rename">
       <input type="hidden" name="id">
       <h2>Change Texturepack Name</h2>
       <p>Usernames must be 3 to 16 characters long.</p>
@@ -106,7 +106,7 @@
       <div class="btn" modal-close>Cancel</div>
       <input type="submit" class="btn primary" value="Rename Pack">
     </form>
-    <form class="modal" modal="duplicate-pack" action="/packs/duplicate">
+    <form class="modal refresh-packs-on-complete" modal="duplicate-pack" action="/packs/duplicate">
       <input type="hidden" name="id">
       <h2>Copy Texture Pack</h2>
 	    <p>Click the button below to create a copy of the pack <b modal-pack-name></b></p>
@@ -114,7 +114,7 @@
       <div class="btn" modal-close>Cancel</div>
       <input type="submit" class="btn primary" value="Duplicate">
     </form>
-    <form class="modal" modal="delete-pack" action="/packs/delete">
+    <form class="modal refresh-packs-on-complete" modal="delete-pack" action="/packs/delete">
       <input type="hidden" name="id">
       <h2>Confirm Delete</h2>
 	    <p>Are you sure you would like to delete the pack <b modal-pack-name></b>?</p>
