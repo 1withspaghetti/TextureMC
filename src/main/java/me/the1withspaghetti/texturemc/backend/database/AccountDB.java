@@ -84,6 +84,21 @@ public class AccountDB {
 		ps.execute();
 	}
 	
+	public static boolean changePassword(long id, String oldHash, String newHash) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("UPDATE accounts SET hash = ? WHERE id = ? AND hash = ?;");
+		ps.setString(1, newHash);
+		ps.setLong(2, id);
+		ps.setString(3, oldHash);
+		return (ps.executeUpdate() > 0);
+	}
+	
+	public static boolean deleteUser(long id, String hash) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("DELETE FROM accounts WHERE id = ? AND hash = ?;");
+		ps.setLong(1, id);
+		ps.setString(2, hash);
+		return (ps.executeUpdate() > 0);
+	}
+	
 	public static void createVerificationRequest(long id, long userId, long sent) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("INSERT INTO verification (id, userId, sent) VALUES(?,?,?);");
 		ps.setLong(1, id);

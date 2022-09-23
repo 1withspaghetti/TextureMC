@@ -137,8 +137,8 @@
       <h2>Change your Password</h2>
       <p>You must use the new password to log in after changing it.</p>
       <div>
-        <input class="textInput" type="password" id="oldPassword" placeholder="Old Password" autocomplete="current-password" regex="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,64}$" msg="Old password is invalid.">
-        <input class="textInput" type="password" id="newPassword" placeholder="New Password" autocomplete="new-password" regex="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,64}$" msg="New password must contain a minimum of eight characters, at least one letter, and one number.">
+        <input class="textInput" type="password" name="oldPassword" placeholder="Old Password" autocomplete="current-password" regex="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,64}$" msg="Old password is invalid.">
+        <input class="textInput" type="password" name="newPassword" placeholder="New Password" autocomplete="new-password" regex="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,64}$" msg="New password must contain a minimum of eight characters, at least one letter, and one number.">
       </div>
       <div class="notification" messages></div>
       <div class="btn" modal-close>Cancel</div>
@@ -148,7 +148,7 @@
       <h2>Delete your Account</h2>
       <p>Please enter your password to continue</p>
       <div class="hdisplay">
-        <input class="textInput" type="password" id="delUserPassword" placeholder="Enter your Password" autocomplete="current-password" regex="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,64}$" msg="Password is invalid.">
+        <input class="textInput" type="password" name="password" placeholder="Enter your Password" autocomplete="current-password" regex="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*#?&]{8,64}$" msg="Password is invalid.">
       </div>
       <div class="notification" id="delUserNotification">This CANNOT be undone!</div>
       <div class="notification" messages></div>

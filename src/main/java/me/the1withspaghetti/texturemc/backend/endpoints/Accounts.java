@@ -1,5 +1,6 @@
 package me.the1withspaghetti.texturemc.backend.endpoints;
 
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.SQLException;
 import java.util.UUID;
@@ -8,6 +9,7 @@ import java.util.concurrent.TimeUnit;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -21,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 import me.the1withspaghetti.texturemc.backend.database.AccountDB;
 import me.the1withspaghetti.texturemc.backend.database.AccountDB.User;
 import me.the1withspaghetti.texturemc.backend.endpoints.clientbound.Response;
+import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.ChangePasswordRequest;
+import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.DeleteUserRequest;
 import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.LoginRequest;
 import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.RegisterRequest;
 import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.RenameUserRequest;
@@ -93,7 +97,7 @@ public class Accounts {
 		return new Response(true);
 	}
 	
-	@GetMapping("/rename")
+	@PostMapping("/rename")
 	public Response rename(@CookieValue(value = "session_token", defaultValue = "") String token, @Validated @RequestBody RenameUserRequest req) throws SQLException {
 		SessionData session = SessionService.getSession(token);
 		if (session == null) throw new ApiException("Invalid Session");
@@ -102,12 +106,33 @@ public class Accounts {
 		return new Response(true);
 	}
 	
-	@GetMapping("/delete")
-	public Response delete(@CookieValue(value = "session_token", defaultValue = "") String token, @Validated @RequestBody RenameUserRequest req) throws SQLException {
+	@PostMapping("/change-password")
+	public Response delete(@CookieValue(value = "session_token", defaultValue = "") String token, @Validated @RequestBody ChangePasswordRequest req, HttpServletResponse res) throws SQLException, NoSuchAlgorithmException {
 		SessionData session = SessionService.getSession(token);
 		if (session == null) throw new ApiException("Invalid Session");
 		
-		// TODO delete user in DB
+		
+		String oldHash = Encryption.SHA_256(req.oldPassword);
+		String newHash = Encryption.SHA_256(req.newPassword);
+		if (!AccountDB.changePassword(session.userId, oldHash, newHash)) throw new ApiException("Incorrect Password", HttpStatus.UNAUTHORIZED);
+		
+		SessionService.removeSessionsByUser(session.userId);
+		UUID newSessionId = SessionService.newSession(session.userId);
+		Cookie newToken = new Cookie("session_token", newSessionId.toString());
+		newToken.setSecure(false);
+		newToken.setPath("/");
+		newToken.setMaxAge((int) TimeUnit.HOURS.toSeconds(1));
+		res.addCookie(newToken);
+		return new Response(true);
+	}
+	
+	@PostMapping("/delete")
+	public Response delete(@CookieValue(value = "session_token", defaultValue = "") String token, @Validated @RequestBody DeleteUserRequest req) throws SQLException, NoSuchAlgorithmException {
+		SessionData session = SessionService.getSession(token);
+		if (session == null) throw new ApiException("Invalid Session");
+		
+		String hash = Encryption.SHA_256(req.password);
+		AccountDB.deleteUser(session.userId, hash);
 		return new Response(true);
 	}
 }
