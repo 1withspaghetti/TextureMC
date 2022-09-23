@@ -30,16 +30,12 @@
       <h2>Texture Packs</h2>
       <div class="hseperator"></div>
       <div id="packs">
-        <!--<div onclick=openPack(event); th:each="pack : ${packs}" th:attr="id=${pack.id}">
-          <v><span th:text="${pack.name}"></span><img src="/images/edit.svg" onclick=confirmChangePackname(event)></v>
-          <v><span th:text="${pack.version}"></span><img src="/images/trash.svg" onclick=confirmDelete(event)><img src="/images/export.svg" onclick=confirmExport(event)><img src="/images/copy.svg" onclick=confirmCopy(event)></v>
-        </div>-->
-        <div data-pack="123" class="pack">
-          <div class="pack-row"><span class="pack-name">My Epic Pack</span><img class="pack-settings" data-pack="123" src="/account/imgs/set.svg"></div>
-          <div class="pack-row">1.19.2 - 114 files</div>
+        <div class="pack" th:each="pack : ${packs}" th:data-pack="${pack.id}" th:data-pack-name="${pack.name}">
+          <div class="pack-row"><span class="pack-name" th:text="${pack.name}"></span><img class="pack-settings" src="/account/imgs/set.svg"></div>
+          <div class="pack-row" th:text="${pack.version}">1.19.2</div>
         </div>
       </div>
-      <div id="packs-empty" th:class="'display '+${#lists.isEmpty(packs) ? 'none' : 'block'}">You don't have any packs yet<br>Click the button below to get started!</div><br>
+      <div id="packs-empty" th:class="'display '+${#lists.isEmpty(packs)} ? 'none' : 'block'">You don't have any packs yet<br>Click the button below to get started!</div><br>
       <div>
         <label class="importpack green" open-modal="new-pack">&#10133; New Texture Pack</label>
         <!--<label for="importPackFile" class="importpack">Import File</label>
@@ -91,6 +87,7 @@
       <div class="btn primary">Import Pack</div>
     </div>
     <div class="modal" modal="download-pack">
+      <input type="hidden" name="id">
       <h2>Export Texture Pack</h2>
 	    <p>Click the button below to download the pack <b id="confirmExportName"></b></p>
       <div class="notification" id="confirmExportNotification"></div>
@@ -112,7 +109,7 @@
     <form class="modal" modal="duplicate-pack" action="/packs/duplicate">
       <input type="hidden" name="id">
       <h2>Copy Texture Pack</h2>
-	    <p>Click the button below to create a copy of the pack <b id="confirmCopyName"></b></p>
+	    <p>Click the button below to create a copy of the pack <b modal-pack-name></b></p>
       <div class="notification" messages></div>
       <div class="btn" modal-close>Cancel</div>
       <input type="submit" class="btn primary" value="Duplicate">
@@ -120,8 +117,8 @@
     <form class="modal" modal="delete-pack" action="/packs/delete">
       <input type="hidden" name="id">
       <h2>Confirm Delete</h2>
-	    <p>Are you sure you would like to delete the pack <b id="confirmDeleteName"></b>?</p>
-      <div class="notification" messages>This cannot be undone!</div>
+	    <p>Are you sure you would like to delete the pack <b modal-pack-name></b>?</p>
+      <div class="notification">This cannot be undone!</div>
       <div class="notification" messages></div>
       <div class="btn" modal-close>Cancel</div>
       <input type="submit" class="btn primary" value="Delete Pack">

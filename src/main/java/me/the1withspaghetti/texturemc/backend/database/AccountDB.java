@@ -143,7 +143,7 @@ public class AccountDB {
 		ps.setString(1, name);
 		ps.setLong(2, id);
 		ps.setLong(3, userId);
-		return ps.executeUpdate() > 0;
+		return (ps.executeUpdate() > 0);
 	}
 	
 	public static boolean duplicatePack(long oldId, long userId, long newId) throws SQLException {
@@ -157,7 +157,7 @@ public class AccountDB {
 		ps.setString(3, incrementName(pack.name));
 		ps.setString(4, pack.version);
 		
-		return ps.executeUpdate() > 0;
+		return (ps.executeUpdate() > 0);
 	}
 	
 	public static boolean deletePack(long id, long userId) throws SQLException {
@@ -165,7 +165,8 @@ public class AccountDB {
 		ps.setLong(1, id);
 		ps.setLong(2, userId);
 		
-		return ps.executeUpdate() > 0;
+		System.out.println(ps.executeUpdate());
+		return true;
 	}
 	
 	private static String incrementName(String name) {
@@ -203,7 +204,7 @@ public class AccountDB {
 		
 		public Pack(long id, long userId, String name, String version) {
 			this.id = id;
-			this.id = userId;
+			this.userId = userId;
 			this.name = name;
 			this.version = version;
 		}

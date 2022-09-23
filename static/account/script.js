@@ -1,12 +1,15 @@
 "use strict";
 var currentPackId = "";
+var currentPackName = "";
 $(document).on("click", e => {
-    if ($(e.target).closest("[data-pack].pack-settings").length == 0) {
+    if ($(e.target).closest(".pack-settings").length == 0) {
         $("#pack_context_menu").attr("data-pack", "").offset({ top: 0, left: 0 }).hide();
     }
 });
 $("[open-modal]").on("click", e => {
-    $(`[modal="${$(e.currentTarget).attr("open-modal")}"]`).show().children(`input[name="id"]`).val(currentPackId);
+    var modal = $(`[modal="${$(e.currentTarget).attr("open-modal")}"]`).show();
+    modal.children(`input[name="id"]`).val(currentPackId);
+    modal.children(`[modal-pack-name]`).text(currentPackName);
     $("#modal-bg").show();
 });
 $("#modal-bg, [modal-close]").on("click", e => {
@@ -15,16 +18,19 @@ $("#modal-bg, [modal-close]").on("click", e => {
         $("[modal]").hide();
     }
 });
-$("[data-pack].pack-settings").on("click", e => {
+$(".pack-settings").on("click", e => {
     let c = $(e.currentTarget);
     let p = c.position();
-    if (c.attr("data-pack") != currentPackId) {
+    let id = c.closest(".pack").attr("data-pack") || "";
+    if (id != currentPackId) {
         $("#pack_context_menu").offset({ top: p.top, left: p.left + (c.width() || 0) }).show();
-        currentPackId = c.attr("data-pack") || "";
+        currentPackId = id;
+        currentPackName = c.closest(".pack").attr("data-pack-name") || "";
     }
     else {
         $("#pack_context_menu").offset({ top: 0, left: 0 }).hide();
         currentPackId = "";
+        currentPackName = "";
     }
 });
 $("#logout").on("click", e => {
