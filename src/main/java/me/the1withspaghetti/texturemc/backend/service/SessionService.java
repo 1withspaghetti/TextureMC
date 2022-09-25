@@ -9,15 +9,25 @@ import java.util.concurrent.TimeUnit;
 public class SessionService {
 	
 	private static HashMap<UUID, SessionData> sessions = new HashMap<>();
+	private static HashMap<UUID, SessionData> unverified_sessions = new HashMap<>();
 	
-	public static UUID newSession(long userId) {
+	public static UUID newSession(long userId, boolean verified) {
 		UUID id = UUID.randomUUID();
-		sessions.put(id, new SessionService().new SessionData(userId));
+		if (verified)
+			sessions.put(id, new SessionService().new SessionData(userId));
+		else
+			unverified_sessions.put(id, new SessionService().new SessionData(userId));
 		return id;
 	}
 	
 	public static SessionData getSession(UUID id) {
 		return sessions.get(id);
+	}
+	
+	public static SessionData getUnverifiedSession(String str) {
+		UUID id = getUUID(str);
+		if (id == null) return null;
+		return unverified_sessions.get(id);
 	}
 	
 	public static SessionData getSession(String str) {

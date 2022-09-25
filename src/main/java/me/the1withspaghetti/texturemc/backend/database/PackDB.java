@@ -21,7 +21,6 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
-
 import me.the1withspaghetti.texturemc.backend.database.objects.PackData;
 import me.the1withspaghetti.texturemc.backend.database.objects.Texture;
 import me.the1withspaghetti.texturemc.backend.exception.ApiException;
@@ -41,36 +40,35 @@ public class PackDB {
 		System.out.println("Connection to MongoDB database has been established");
 	}
 	
-	public static void createPack(long id) {
-		PackData pack = new PackData(id, new Document());
+	public static void createPack(long id, long userId) {
+		PackData pack = new PackData(id, userId, new Document());
 		packs.insertOne(pack);
 	}
 	
-	public static PackData getPack(long id) {
-		return packs.find(Filters.eq("_id", id), PackData.class).first();
+	public static PackData getPack(long id, long userId) {
+		return packs.find(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId)), PackData.class).first();
 	}
 	
-	public static void duplicatePack(long id, long newId) {
-		PackData pack = getPack(id);
+	public static void duplicatePack(long id, long userId, long newId) {
+		PackData pack = getPack(id, userId);
 		pack._id = newId;
 		packs.insertOne(pack);
 	}
 	
-	public static void deletePack(long id) {
-		packs.deleteOne(Filters.eq("_id", id));
+	public static boolean deletePack(long id, long userId) {
+		return packs.deleteOne(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId))).getDeletedCount() > 0;
 	}
 	
-	public static Texture getItem(long id, String path) {
+	public static Texture getItem(long id, long userId, String path) {
 		String newPath = path.replace('/', '.');
-		PackData res = packs.find(Filters.eq("_id", id), PackData.class).limit(1).projection(Projections.include(newPath)).first();
-		if (res == null) throw new ApiException("Unknown Texture Pack");
+		PackData res = packs.find(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId)), PackData.class).limit(1).projection(Projections.include(newPath)).first();
+		if (res == null) throw new ApiException("Unknown Pack");
 		Texture t = res.data.getEmbedded(Arrays.asList(StringUtils.split(newPath, '.')), Texture.class);
-		if (t == null) throw new ApiException("Unknown Item");
 		return t;
 	}
 	
-	public static void insertItem(long id, String path, Texture item) {
-		packs.updateOne(Filters.eq("_id", id), Updates.set("data."+path.replace('/', '.'), item));
+	public static boolean insertItem(long id, long userId, String path, Texture item) {
+		return packs.updateOne(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId)), Updates.set("data."+path.replace('/', '.'), item)).getMatchedCount() > 0;
 	}
 	
 	

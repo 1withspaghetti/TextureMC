@@ -132,6 +132,7 @@ public class AccountDB {
 	public static Pack getPack(long id, long userId) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT id, userId, name, version FROM packs WHERE id = ? AND userId = ?;");
 		ps.setLong(1, id);
+		ps.setLong(2, userId);
 		
 		ResultSet rs = ps.executeQuery();
 		if (!rs.next()) return null;
@@ -189,6 +190,15 @@ public class AccountDB {
 		
 		System.out.println(ps.executeUpdate());
 		return true;
+	}
+	
+	public static String getPackVersion(long id, long userId) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("SELECT id, userId, name, version FROM packs WHERE id = ? AND userId = ?;");
+		ps.setLong(1, id);
+		ps.setLong(2, userId);
+		ResultSet rs = ps.executeQuery();
+		if (!rs.next()) return null;
+		return rs.getString(1);
 	}
 	
 	private static String incrementName(String name) {

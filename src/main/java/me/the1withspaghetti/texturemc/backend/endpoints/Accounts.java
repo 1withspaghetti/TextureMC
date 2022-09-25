@@ -57,7 +57,7 @@ public class Accounts {
 		
 		AccountDB.addUser(id, req.email, req.username, hash);
 		
-		UUID session = SessionService.newSession(id);
+		UUID session = SessionService.newSession(id, false);
 		Cookie token = new Cookie("session_token", session.toString());
 		token.setSecure(false);
 		token.setPath("/");
@@ -73,7 +73,7 @@ public class Accounts {
 		User user = AccountDB.getUser(req.email, hash);
 		if (user == null) throw new ApiException("Invalid email or password.");
 		
-		UUID session = SessionService.newSession(user.id);
+		UUID session = SessionService.newSession(user.id, user.verified);
 		Cookie token = new Cookie("session_token", session.toString());
 		token.setSecure(false);
 		token.setPath("/");
@@ -84,9 +84,13 @@ public class Accounts {
 	
 	@GetMapping("/heartbeat")
 	public Response heartbeat(@CookieValue(value = "session_token", defaultValue = "") String token) {
-		UUID session = SessionService.getUUID(token);
-		if (session == null) throw new ApiException("Invalid Session");
-		SessionService.getSession(session).heartbeat();
+		SessionData session = SessionService.getSession(token);
+		if (session == null) {
+			session = SessionService.getUnverifiedSession(token);
+			if (session == null) throw new ApiException("Invalid Session");
+			session.heartbeat();
+		}
+		session.heartbeat();
 		return new Response(true);
 	}
 	
@@ -117,7 +121,7 @@ public class Accounts {
 		if (!AccountDB.changePassword(session.userId, oldHash, newHash)) throw new ApiException("Incorrect Password", HttpStatus.UNAUTHORIZED);
 		
 		SessionService.removeSessionsByUser(session.userId);
-		UUID newSessionId = SessionService.newSession(session.userId);
+		UUID newSessionId = SessionService.newSession(session.userId, true);
 		Cookie newToken = new Cookie("session_token", newSessionId.toString());
 		newToken.setSecure(false);
 		newToken.setPath("/");

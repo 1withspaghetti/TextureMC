@@ -49,5 +49,10 @@
   <script src="/editor/js/tools.js"></script>
   <script src="/editor/js/canvas.js"></script>
   <script src="/editor/js/controller.js"></script>
+  <script th:inline="javascript">
+    const packId = /*[[${pack_id}]]*/ 0;
+    const packName = /*[[${pack_name}]]*/ "Error Loading Pack";
+    const packVersion = /*[[${pack_version}]]*/ "1.19.2";
+  </script>
 </body>
 </html>

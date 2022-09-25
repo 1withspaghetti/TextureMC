@@ -11,7 +11,7 @@
     <div class="panel">
       <div class="panel-text">
         <h2>Error <span th:text="${status}"></span> - <span th:text="${error}"></span></h2>
-        <span>If you believe this is an error, please 
+        <span th:text="${error_extra}">If you believe this is an error, please 
           contact <a href="mailto:bugs@texturemc.com">bugs@texturemc.com</a>.</span><br>
         <a href="/"><button class="button-primary">Return Home</button></a>
       </div>
