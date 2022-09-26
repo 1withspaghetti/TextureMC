@@ -1,7 +1,7 @@
 "use strict";
-var packId /* = new URLSearchParams(window.location.search).get("pack")*/;
+var packId;
 var packName;
-var packVersion = "1.19.2";
+var packVersion;
 var fileMeta;
 function getPath(elm) {
     var str = "";
@@ -11,10 +11,10 @@ function getPath(elm) {
     return str;
 }
 function onFileChange(e) {
-    var name = e.currentTarget.getAttribute("name");
+    var name = e.currentTarget.getAttribute("name") || "";
     $("file.selected").removeClass("selected");
     e.currentTarget.classList.add("selected");
-    $.getJSON("/assets/" + packVersion + "/" + name + ".json", (json) => {
+    $.getJSON(`/packs/data/${packId}/get?path=${encodeURIComponent(name)}`, (json) => {
         if (json.meta)
             fileMeta = json.meta;
         else

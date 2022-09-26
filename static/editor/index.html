@@ -3,10 +3,9 @@
 <head>
   <title>Editor - TextureMC</title>
   <div th:replace="/index.html :: header"></div>
-  <link rel="stylesheet" type="text/css" href="/editor/style.css">
-  <link rel='stylesheet' href='libs/spectrum.css'/>
-  <script src='libs/spectrum.js'></script>
-  <script type="text/javascript" src="/editor/script.js"></script>
+  <link rel="stylesheet" type="text/css" href="/editor/css/styles.css">
+  <link rel='stylesheet' href='/editor/libs/spectrum.css'/>
+  <script src='/editor/libs/spectrum.js'></script>
 </head>
 <body>
   <div th:replace="/index.html :: navbar"></div>
@@ -29,15 +28,15 @@
           <input type='text' id="color_selection"/>
         </div>
         <div class="toollist">
-          <div class="tool selected" data-tool="pen" data-cursor="imgs/pen_cursor.png"><img src="imgs/pen.svg"></div>
-          <div class="tool" data-tool="paintBucket" data-cursor="imgs/paint_bucket_cursor.png"><img src="imgs/paint_bucket.svg"></div>
-          <div class="tool" data-tool="line" data-cursor="imgs/pen_cursor.png"><img src="imgs/line_tool.svg"></div>
-          <div class="tool" data-tool="circle" data-cursor="imgs/pen_cursor.png"><img src="imgs/circle_tool.svg"></div>
-          <div class="tool" data-tool="box" data-cursor="imgs/pen_cursor.png"><img src="imgs/box_tool.svg"></div>
-          <div class="tool" data-tool="variation" data-cursor="imgs/pen_cursor.png"><img src="imgs/variation_tool.svg"></div>
+          <div class="tool selected" data-tool="pen" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/pen.svg"></div>
+          <div class="tool" data-tool="paintBucket" data-cursor="/editor/imgs/paint_bucket_cursor.png"><img src="/editor/imgs/paint_bucket.svg"></div>
+          <div class="tool" data-tool="line" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/line_tool.svg"></div>
+          <div class="tool" data-tool="circle" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/circle_tool.svg"></div>
+          <div class="tool" data-tool="box" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/box_tool.svg"></div>
+          <div class="tool" data-tool="variation" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/variation_tool.svg"></div>
         </div>
       </div>
-      <div id="camera" style="cursor: url('imgs/pen.png') 0 16, default;">
+      <div id="camera" style="cursor: url('/editor/imgs/pen_cursor.png') 0 16, default;">
         <div id="pos_container">
             <canvas id="main" width="16" height="16" class="checkerboard-bg small"></canvas>
             <canvas id="preview" width="16" height="16"></canvas>
@@ -50,9 +49,10 @@
   <script src="/editor/js/canvas.js"></script>
   <script src="/editor/js/controller.js"></script>
   <script th:inline="javascript">
-    const packId = /*[[${pack_id}]]*/ 0;
-    const packName = /*[[${pack_name}]]*/ "Error Loading Pack";
-    const packVersion = /*[[${pack_version}]]*/ "1.19.2";
+    var packId = /*[[${pack_id}]]*/ 0;
+    var packName = /*[[${pack_name}]]*/ "Error Loading Pack";
+    var packVersion = /*[[${pack_version}]]*/ "1.19.2";
   </script>
+  <script type="text/javascript" src="/editor/js/script.js"></script>
 </body>
 </html>

@@ -34,7 +34,7 @@ $('form').on("submit", (e)=>{
         contentType: "application/json; charset=utf-8",
         dataType: "json",
     }).done((res,t,req) => {
-        if (re.success) {
+        if (res.success) {
             if (form.attr("success")) location.href = form.attr("success");
             form.trigger("done", res)
         } else {

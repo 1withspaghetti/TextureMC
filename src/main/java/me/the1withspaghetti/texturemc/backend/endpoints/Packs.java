@@ -1,5 +1,7 @@
 package me.the1withspaghetti.texturemc.backend.endpoints;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.Random;
@@ -18,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.core.exc.StreamReadException;
+import com.fasterxml.jackson.databind.DatabindException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import me.the1withspaghetti.texturemc.backend.database.AccountDB;
 import me.the1withspaghetti.texturemc.backend.database.AccountDB.Pack;
@@ -42,6 +48,7 @@ public class Packs {
 	public static final int MAX_PACKS = 5;
 	
 	static Random rand = new Random();
+	static ObjectMapper mapper = new ObjectMapper();
 	
 	@GetMapping("/list")
 	public static Response listPacks(@CookieValue(value = "session_token", defaultValue = "") String token) throws SQLException {
@@ -63,7 +70,7 @@ public class Packs {
 		AccountDB.addPack(id, session.userId, req.name, req.version);
 		PackDB.createPack(id, session.userId);
 		
-		return new Response(false);
+		return new Response(true);
 	}
 	
 	@PostMapping("/rename")
@@ -101,7 +108,7 @@ public class Packs {
 	}
 	
 	
-	@PostMapping("/{id}/upload")
+	@PostMapping("/data/{id}/upload")
 	public static Response upload(@CookieValue(value = "session_token", defaultValue = "") String token, @Validated @RequestBody Texture req, @PathVariable(value="id") long pack, @RequestParam @Pattern(regexp="^[a-b\\/]{1,100}$") String path) throws SQLException {
 		SessionData session = SessionService.getSession(token);
 		if (session == null) throw new ApiException("Invalid Session");
@@ -115,13 +122,27 @@ public class Packs {
 		return new Response(true);
 	}
 	
-	@PostMapping("/{id}/get")
-	public static Response get(@CookieValue(value = "session_token", defaultValue = "") String token, @PathVariable(value="id") long pack, @RequestParam @Pattern(regexp="^[a-b\\/]{1,100}$") String path) {
+	@GetMapping("/data/{id}/get")
+	public static Response get(@CookieValue(value = "session_token", defaultValue = "") String token, @PathVariable(value="id") long pack, @RequestParam @Pattern(regexp="^[a-b\\/]{1,100}$") String path) throws SQLException, StreamReadException, DatabindException, IOException {
 		SessionData session = SessionService.getSession(token);
 		if (session == null) throw new ApiException("Invalid Session");
 		
+		System.out.println("path: "+path+" pack: "+pack+" userId: "+session.userId);
+		
 		Texture item = PackDB.getItem(pack, session.userId, path);
-		if (item == null) throw new ApiException("Unknown Item");
+		if (item == null) {
+			String version = AccountDB.getPackVersion(pack, session.userId);
+			if (version == null) throw new ApiException("Unknown Pack");
+			
+			File file = new File(System.getProperty("user.dir")+("/static/assets/"+version+"/"+path+".json").replace('/', File.separatorChar));
+			System.out.println(file.getPath());
+			if (!file.exists()) throw new ApiException("Unknown Item");
+			
+			Texture t = mapper.readValue(file, Texture.class);
+			if (t == null) throw new ApiException("Unknown Item");
+			
+			return new TextureResponse(t);
+		}
 		
 		return new TextureResponse(item);
 	}

@@ -30,25 +30,25 @@ public class PageController {
 		return "";
 	}
 	
-	@GetMapping({"/about/","/about/index.html"})
+	@GetMapping({"/about","/about/index.html"})
 	public String getAbout(Model model, @CookieValue(value = "session_token", defaultValue = "") String token) {
 		model.addAttribute("hasSession", SessionService.getSession(token) != null);
 		return "about";
 	}
 	
-	@GetMapping({"/login/","/login/index.html"})
+	@GetMapping({"/login","/login/index.html"})
 	public String getLogin(Model model, @CookieValue(value = "session_token", defaultValue = "") String token) {
 		model.addAttribute("hasSession", SessionService.getSession(token) != null);
 		return "login";
 	}
 	
-	@GetMapping({"/signup/","/signup/index.html"})
+	@GetMapping({"/signup","/signup/index.html"})
 	public String getSignup(Model model, @CookieValue(value = "session_token", defaultValue = "") String token) {
 		model.addAttribute("hasSession", SessionService.getSession(token) != null);
 		return "signup";
 	}
 	
-	@GetMapping({"/confirm-email/","/signup/index.html"})
+	@GetMapping({"/confirm-email","/signup/index.html"})
 	public String getEmailConfirm(Model model, @CookieValue(value = "session_token", defaultValue = "") String token, @RequestParam(name="confirmation") String idStr, HttpServletResponse res) {
 		model.addAttribute("hasSession", SessionService.getSession(token) != null);
 		
@@ -79,7 +79,7 @@ public class PageController {
 		return "error";
 	}
 	
-	@GetMapping({"/account/","/account/index.html"})
+	@GetMapping({"/account","/account/index.html"})
 	public String getAccount(Model model, @CookieValue(value = "session_token", defaultValue = "") String token) {
 		SessionData session = SessionService.getSession(token);
 		if (session != null) 
@@ -111,7 +111,7 @@ public class PageController {
 		return "redirect:/account/";
 	}
 	
-	@GetMapping("/editor/{id}/")
+	@GetMapping("/editor/{id}")
 	public String getEditor(Model model, @CookieValue(value = "session_token", defaultValue = "") String token, @PathVariable(value="id") long id) throws SQLException {
 		SessionData session = SessionService.getSession(token);
 		if (session != null) 

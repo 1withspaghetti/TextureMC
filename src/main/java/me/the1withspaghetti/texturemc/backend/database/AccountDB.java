@@ -38,6 +38,7 @@ public class AccountDB {
 					+ " FOREIGN KEY (userId) REFERENCES accounts(id)"
 	                + ");");
 			con.createStatement().execute("CREATE INDEX IF NOT EXISTS accounts_by_id ON accounts (id);");
+			con.createStatement().execute("CREATE INDEX IF NOT EXISTS packs_by_id ON packs (id);");
 			
 			System.out.println("Connection to SQL database has been established");
 		} catch (SQLException e) {
@@ -193,7 +194,7 @@ public class AccountDB {
 	}
 	
 	public static String getPackVersion(long id, long userId) throws SQLException {
-		PreparedStatement ps = con.prepareStatement("SELECT id, userId, name, version FROM packs WHERE id = ? AND userId = ?;");
+		PreparedStatement ps = con.prepareStatement("SELECT version FROM packs WHERE id = ? AND userId = ?;");
 		ps.setLong(1, id);
 		ps.setLong(2, userId);
 		ResultSet rs = ps.executeQuery();

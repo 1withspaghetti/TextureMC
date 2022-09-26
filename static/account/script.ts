@@ -1,6 +1,9 @@
 var currentPackId: string = "";
 var currentPackName: string = "";
 
+$(".pack").on("click", e=>{
+    location.href = `/editor/${e.currentTarget.getAttribute("data-pack")}/`
+})
 $(document).on("click", e => {
     if ($(e.target).closest(".pack-settings").length == 0) {
         $("#pack_context_menu").attr("data-pack", "").offset({top: 0, left: 0}).hide();

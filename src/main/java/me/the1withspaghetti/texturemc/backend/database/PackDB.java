@@ -23,7 +23,6 @@ import com.mongodb.client.model.Projections;
 import com.mongodb.client.model.Updates;
 import me.the1withspaghetti.texturemc.backend.database.objects.PackData;
 import me.the1withspaghetti.texturemc.backend.database.objects.Texture;
-import me.the1withspaghetti.texturemc.backend.exception.ApiException;
 
 public class PackDB {
 	
@@ -62,7 +61,7 @@ public class PackDB {
 	public static Texture getItem(long id, long userId, String path) {
 		String newPath = path.replace('/', '.');
 		PackData res = packs.find(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId)), PackData.class).limit(1).projection(Projections.include(newPath)).first();
-		if (res == null) throw new ApiException("Unknown Pack");
+		if (res == null) return null;
 		Texture t = res.data.getEmbedded(Arrays.asList(StringUtils.split(newPath, '.')), Texture.class);
 		return t;
 	}

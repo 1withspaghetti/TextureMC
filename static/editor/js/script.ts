@@ -1,6 +1,6 @@
-var packId/* = new URLSearchParams(window.location.search).get("pack")*/;
-var packName;
-var packVersion = "1.19.2";
+var packId: number;
+var packName: string;
+var packVersion: string;
 
 var fileMeta;
 
@@ -13,10 +13,10 @@ function getPath(elm: JQuery<HTMLElement>): string {
 }
 
 function onFileChange(e: JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>) {
-    var name = e.currentTarget.getAttribute("name");
+    var name = e.currentTarget.getAttribute("name") || "";
     $("file.selected").removeClass("selected");
     e.currentTarget.classList.add("selected");
-    $.getJSON("/assets/"+packVersion+"/"+name+".json", (json) => {
+    $.getJSON(`/packs/data/${packId}/get?path=${encodeURIComponent(name)}`, (json) => {
         if (json.meta) fileMeta = json.meta;
         else fileMeta = {};
         canvas.setImage(json.img);

@@ -312,7 +312,7 @@ folder-label:not(folder folder-label) {
 }
 
 folder-label::before {
-    background-image: url('imgs/expand0.svg');
+    background-image: url('/editor/imgs/expand0.svg');
     background-size: 35px 35px;
     background-position: center;
     width: 25px;
@@ -321,5 +321,5 @@ folder-label::before {
 }
 
 folder-label.open::before {
-    background-image: url('imgs/expand1.svg');
+    background-image: url('/editor/imgs/expand1.svg');
 }
