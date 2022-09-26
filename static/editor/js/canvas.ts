@@ -140,6 +140,8 @@ class Canvas {
                         setPixel(this.main, pixel.o, pixel.x, pixel.y);
                     }
                     this.historyPosition -= 1;
+                } else {
+                    $(document).trigger("canvas.saved", true);
                 }
             }
             else if (e.key == 'y' && e.ctrlKey) {
@@ -150,6 +152,7 @@ class Canvas {
                         this.main.fillStyle = pixel.n.toString();
                         setPixel(this.main, pixel.n, pixel.x, pixel.y);
                     }
+                    $(document).trigger("canvas.saved", false);
                   }
             }
         })
@@ -238,6 +241,7 @@ class Canvas {
             }
             this.history.push(history);
             this.historyPosition++;
+            $(document).trigger("canvas.saved", false);
         }
     }
 

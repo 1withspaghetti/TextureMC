@@ -2,7 +2,39 @@ var packId: number;
 var packName: string;
 var packVersion: string;
 
-var fileMeta;
+var currentPath;
+var fileMeta: any;
+
+$("#save").on("click", e=>{
+    $(document).trigger("canvas.save")
+})
+$(document).on("canvas.save", e => {
+    $("#save_status").text("Saving...");
+    $.ajax(`/packs/data/${packId}/upload`, {
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        data: {
+            meta: fileMeta,
+            img: canvas.getImage()
+        }
+    }).done((res) => {
+        if (res.success) {
+            $(document).trigger("canvas.saved", true);
+        } else {
+            $(document).trigger("canvas.saved", false);
+            $(document).trigger("canvas.error", "Could not save asset: "+res.reason)
+        }
+    }).fail((res) => {
+        $(document).trigger(`canvas.error", "Could not save asset: ${res.status} ${res.responseJSON?.reason || res.statusText}`)
+    });
+}).on("canvas.saved", (e, s: boolean) => {
+    if (s) {
+        $("#save_status").text("Saved")
+    } else {
+        $("#save_status").text("Unsaved")
+    }
+});
 
 function getPath(elm: JQuery<HTMLElement>): string {
     var str = "";
@@ -14,12 +46,13 @@ function getPath(elm: JQuery<HTMLElement>): string {
 
 function onFileChange(e: JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>) {
     var name = e.currentTarget.getAttribute("name") || "";
+    currentPath = name;
     $("file.selected").removeClass("selected");
     e.currentTarget.classList.add("selected");
     $.getJSON(`/packs/data/${packId}/get?path=${encodeURIComponent(name)}`, (json) => {
-        if (json.meta) fileMeta = json.meta;
+        if (json.data.meta) fileMeta = json.meta;
         else fileMeta = {};
-        canvas.setImage(json.img);
+        canvas.setImage(json.data.img);
     })
 }
 

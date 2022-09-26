@@ -20,14 +20,17 @@
     border-bottom: 5px solid var(--main-outline-color);
 }
   
-.pack .save img {
-    cursor: pointer;
-    height: 32px;
-    float: right;
-}
-  
-.pack #packVersion {
+.pack .version {
     color: var(--secondary-selection-color);
+}
+
+.pack .save {
+    color: var(--secondary-selection-color);
+    cursor: pointer;
+}
+
+.pack .save:hover {
+    color: var(--main-selection-color)
 }
   
 .sidebar {

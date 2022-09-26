@@ -6,14 +6,20 @@
   <link rel="stylesheet" type="text/css" href="/editor/css/styles.css">
   <link rel='stylesheet' href='/editor/libs/spectrum.css'/>
   <script src='/editor/libs/spectrum.js'></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
   <div th:replace="/index.html :: navbar"></div>
   <div class="editor">
     <div class="sidebar">
       <div class="pack">
-        <span id="packName" th:text="${packName}">Pack Name</span>
-        <span id="packVersion" th:text="${packVersion}">1.19.2</span>
+        <div>
+          <span th:text="${pack_name}">Pack Name</span>
+          <span class="version" th:text="${pack_version}">1.19.2</span>
+        </div>
+        <div class="save" id="save">
+          <i class="fa fa-save"></i> <span id="save_status">Saved</span>
+        </div>
       </div>
       <div class="filetree" style="visibility: hidden;">
       </div>
