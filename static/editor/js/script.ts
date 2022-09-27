@@ -2,13 +2,19 @@ var packId: number;
 var packName: string;
 var packVersion: string;
 
-var currentPath;
+var currentPath = "";
 var fileMeta: any;
+var saveStatus: boolean = true;
 
 $("#save").on("click", e=>{
     $(document).trigger("canvas.save")
 })
-$(document).on("canvas.save", e => {
+
+function saveAsset(done: (res: any) => void): void {
+    if (currentPath == "" || canvas.historyPosition == -1) {
+        done({});
+        return;
+    }
     $("#save_status").text("Saving...");
     $.ajax(`/packs/data/${packId}/upload`, {
         method: "POST",
@@ -21,14 +27,19 @@ $(document).on("canvas.save", e => {
     }).done((res) => {
         if (res.success) {
             $(document).trigger("canvas.saved", true);
+            done(res);
         } else {
             $(document).trigger("canvas.saved", false);
             $(document).trigger("canvas.error", "Could not save asset: "+res.reason)
         }
     }).fail((res) => {
+        $(document).trigger("canvas.saved", false);
         $(document).trigger(`canvas.error", "Could not save asset: ${res.status} ${res.responseJSON?.reason || res.statusText}`)
     });
-}).on("canvas.saved", (e, s: boolean) => {
+}
+
+$(document).on("canvas.saved", (e, s: boolean) => {
+    saveStatus = s;
     if (s) {
         $("#save_status").text("Saved")
     } else {
@@ -45,14 +56,16 @@ function getPath(elm: JQuery<HTMLElement>): string {
 }
 
 function onFileChange(e: JQuery.ClickEvent<HTMLElement, undefined, HTMLElement, HTMLElement>) {
-    var name = e.currentTarget.getAttribute("name") || "";
-    currentPath = name;
-    $("file.selected").removeClass("selected");
-    e.currentTarget.classList.add("selected");
-    $.getJSON(`/packs/data/${packId}/get?path=${encodeURIComponent(name)}`, (json) => {
-        if (json.data.meta) fileMeta = json.meta;
-        else fileMeta = {};
-        canvas.setImage(json.data.img);
+    saveAsset(()=>{
+        var name = e.currentTarget.getAttribute("name") || "";
+        currentPath = name;
+        $("file.selected").removeClass("selected");
+        e.currentTarget.classList.add("selected");
+        $.getJSON(`/packs/data/${packId}/get?path=${encodeURIComponent(name)}`, (json) => {
+            if (json.data.meta) fileMeta = json.meta;
+            else fileMeta = {};
+            canvas.setImage(json.data.img);
+        })
     })
 }
 
@@ -83,4 +96,10 @@ $(()=>{
         genFolder(tree, $(".filetree"), "");
         $(".filetree").css("visibility", "visible")
     })
+})
+
+$(this).on("beforeunload", (e: BeforeUnloadEvent) => {
+    e.preventDefault();
+    e.returnValue = saveStatus ? "If you leave this page, you may lose unsaved changes" : null;
+    return e.returnValue;
 })
