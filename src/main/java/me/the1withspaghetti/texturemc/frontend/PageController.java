@@ -122,7 +122,7 @@ public class PageController {
 		Pack pack = AccountDB.getPack(id, session.userId);
 		if (pack == null) return "redirect:/account/?error_msg=Unknown%20Pack";
 		
-		model.addAttribute("pack_id", pack.id);
+		model.addAttribute("pack_id", String.valueOf(pack.id));
 		model.addAttribute("pack_name", pack.name);
 		model.addAttribute("pack_version", pack.version);
 		

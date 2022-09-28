@@ -2,7 +2,52 @@
 var packId;
 var packName;
 var packVersion;
+var currentPath = "";
 var fileMeta;
+var saveStatus = true;
+$("#save").on("click", e => {
+    saveAsset();
+});
+function saveAsset(done) {
+    if (currentPath == "" || canvas.historyPosition == -1) {
+        if (done)
+            done({});
+        return;
+    }
+    $("#save_status").text("Saving...");
+    $.ajax(`/packs/data/${packId}/upload?path=?path=${encodeURIComponent(currentPath)}`, {
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({
+            meta: fileMeta,
+            img: canvas.getImage()
+        })
+    }).done((res) => {
+        if (res.success) {
+            $(document).trigger("canvas.saved", true);
+            if (done)
+                done(res);
+        }
+        else {
+            $(document).trigger("canvas.saved", false);
+            $(document).trigger("canvas.error", "Could not save asset: " + res.reason);
+        }
+    }).fail((res) => {
+        var _a;
+        $(document).trigger("canvas.saved", false);
+        $(document).trigger(`canvas.error", "Could not save asset: ${res.status} ${((_a = res.responseJSON) === null || _a === void 0 ? void 0 : _a.reason) || res.statusText}`);
+    });
+}
+$(document).on("canvas.saved", (e, s) => {
+    saveStatus = s;
+    if (s) {
+        $("#save_status").text("Saved");
+    }
+    else {
+        $("#save_status").text("Unsaved");
+    }
+});
 function getPath(elm) {
     var str = "";
     elm.closest(".folder").each((i, e) => {
@@ -11,15 +56,18 @@ function getPath(elm) {
     return str;
 }
 function onFileChange(e) {
-    var name = e.currentTarget.getAttribute("name") || "";
-    $("file.selected").removeClass("selected");
-    e.currentTarget.classList.add("selected");
-    $.getJSON(`/packs/data/${packId}/get?path=${encodeURIComponent(name)}`, (json) => {
-        if (json.meta)
-            fileMeta = json.meta;
-        else
-            fileMeta = {};
-        canvas.setImage(json.img);
+    saveAsset(() => {
+        var name = e.currentTarget.getAttribute("name") || "";
+        currentPath = name;
+        $("file.selected").removeClass("selected");
+        e.currentTarget.classList.add("selected");
+        $.getJSON(`/packs/data/${packId}/get?path=${encodeURIComponent(name)}`, (json) => {
+            if (json.data.meta)
+                fileMeta = json.meta;
+            else
+                fileMeta = {};
+            canvas.setImage(json.data.img);
+        });
     });
 }
 $(() => {
@@ -49,4 +97,9 @@ $(() => {
         genFolder(tree, $(".filetree"), "");
         $(".filetree").css("visibility", "visible");
     });
+});
+$(this).on("beforeunload", (e) => {
+    e.preventDefault();
+    e.returnValue = saveStatus ? "If you leave this page, you may lose unsaved changes" : null;
+    return e.returnValue;
 });

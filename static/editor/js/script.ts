@@ -7,27 +7,27 @@ var fileMeta: any;
 var saveStatus: boolean = true;
 
 $("#save").on("click", e=>{
-    $(document).trigger("canvas.save")
+    saveAsset();
 })
 
-function saveAsset(done: (res: any) => void): void {
+function saveAsset(done?: (res: any) => void): void {
     if (currentPath == "" || canvas.historyPosition == -1) {
-        done({});
+        if (done) done({});
         return;
     }
     $("#save_status").text("Saving...");
-    $.ajax(`/packs/data/${packId}/upload`, {
+    $.ajax(`/packs/data/${packId}/upload?path=?path=${encodeURIComponent(currentPath)}`, {
         method: "POST",
         dataType: "json",
         contentType: "application/json; charset=utf-8",
-        data: {
+        data: JSON.stringify({
             meta: fileMeta,
             img: canvas.getImage()
-        }
+        })
     }).done((res) => {
         if (res.success) {
             $(document).trigger("canvas.saved", true);
-            done(res);
+            if (done) done(res);
         } else {
             $(document).trigger("canvas.saved", false);
             $(document).trigger("canvas.error", "Could not save asset: "+res.reason)

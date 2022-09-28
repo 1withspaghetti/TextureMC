@@ -1,9 +1,6 @@
 "use strict";
 var currentPackId = "";
 var currentPackName = "";
-$(".pack").on("click", e => {
-    location.href = `/editor/${e.currentTarget.getAttribute("data-pack")}/`;
-});
 $(document).on("click", e => {
     if ($(e.target).closest(".pack-settings").length == 0) {
         $("#pack_context_menu").attr("data-pack", "").offset({ top: 0, left: 0 }).hide();
@@ -19,21 +16,6 @@ $("#modal-bg, [modal-close]").on("click", e => {
     if (e.target == e.currentTarget) {
         $("#modal-bg").hide();
         $("[modal]").hide();
-    }
-});
-$(".pack-settings").on("click", e => {
-    let c = $(e.currentTarget);
-    let p = c.position();
-    let id = c.closest(".pack").attr("data-pack") || "";
-    if (id != currentPackId) {
-        $("#pack_context_menu").offset({ top: p.top, left: p.left + (c.width() || 0) }).show();
-        currentPackId = id;
-        currentPackName = c.closest(".pack").attr("data-pack-name") || "";
-    }
-    else {
-        $("#pack_context_menu").offset({ top: 0, left: 0 }).hide();
-        currentPackId = "";
-        currentPackName = "";
     }
 });
 $("form").on("done", (e) => {
@@ -53,12 +35,14 @@ $("#logout").on("click", e => {
 });
 function refreshPacks() {
     $.ajax("/packs/list", { dataType: "json" }).done((res) => {
+        $("#packs").html();
         for (let pack of res.packs) {
             $("#packs").append(`<div class="pack" data-pack="${pack.id}" data-pack-name="${pack.name}">
                 <div class="pack-row"><span class="pack-name">${pack.name}</span><img class="pack-settings" src="/account/imgs/set.svg"></div>
                 <div class="pack-row">${pack.version}</div>
             </div>`);
         }
+        addPackEventListeners();
         if (res.packs.length == 0) {
             $("#packs_empty").show();
         }
@@ -67,3 +51,25 @@ function refreshPacks() {
         }
     });
 }
+function addPackEventListeners() {
+    $(".pack").on("click", e => {
+        if (!$(e.target).hasClass("pack-settings"))
+            location.href = `/editor/${e.currentTarget.getAttribute("data-pack")}/`;
+    });
+    $(".pack-settings").on("click", e => {
+        let c = $(e.currentTarget);
+        let p = c.position();
+        let id = c.closest(".pack").attr("data-pack") || "";
+        if (id != currentPackId) {
+            $("#pack_context_menu").offset({ top: p.top, left: p.left + (c.width() || 0) }).show();
+            currentPackId = id;
+            currentPackName = c.closest(".pack").attr("data-pack-name") || "";
+        }
+        else {
+            $("#pack_context_menu").offset({ top: 0, left: 0 }).hide();
+            currentPackId = "";
+            currentPackName = "";
+        }
+    });
+}
+addPackEventListeners();

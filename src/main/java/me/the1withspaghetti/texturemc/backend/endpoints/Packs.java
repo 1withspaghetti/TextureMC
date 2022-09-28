@@ -80,7 +80,7 @@ public class Packs {
 		
 		if (!AccountDB.renamePack(req.id, session.userId, req.name)) throw new ApiException("Unknown Pack", HttpStatus.NOT_FOUND);
 		
-		return new Response(false);
+		return new Response(true);
 	}
 	
 	@PostMapping("/duplicate")
@@ -93,7 +93,7 @@ public class Packs {
 		if (!AccountDB.duplicatePack(req.id, session.userId, newId)) throw new ApiException("Unknown Pack", HttpStatus.NOT_FOUND);
 		PackDB.duplicatePack(req.id, session.userId, newId);
 		
-		return new Response(false);
+		return new Response(true);
 	}
 	
 	@PostMapping("/delete")
@@ -104,7 +104,7 @@ public class Packs {
 		if (!AccountDB.deletePack(req.id, session.userId)) throw new ApiException("Unknown Pack", HttpStatus.NOT_FOUND);
 		PackDB.deletePack(req.id, session.userId);
 		
-		return new Response(false);
+		return new Response(true);
 	}
 	
 	
@@ -112,6 +112,8 @@ public class Packs {
 	public static Response upload(@CookieValue(value = "session_token", defaultValue = "") String token, @Validated @RequestBody Texture req, @PathVariable(value="id") long pack, @RequestParam @Pattern(regexp="^[a-b\\/]{1,100}$") String path) throws SQLException {
 		SessionData session = SessionService.getSession(token);
 		if (session == null) throw new ApiException("Invalid Session");
+		
+		System.out.println("POST path: "+path+" pack: "+pack+" userId: "+session.userId);
 		
 		String version = AccountDB.getPackVersion(pack, session.userId);
 		if (version == null) throw new ApiException("Unknown Pack");
@@ -127,7 +129,7 @@ public class Packs {
 		SessionData session = SessionService.getSession(token);
 		if (session == null) throw new ApiException("Invalid Session");
 		
-		System.out.println("path: "+path+" pack: "+pack+" userId: "+session.userId);
+		System.out.println("GET path: "+path+" pack: "+pack+" userId: "+session.userId);
 		
 		Texture item = PackDB.getItem(pack, session.userId, path);
 		if (item == null) {

@@ -45,7 +45,7 @@ public class PackDB {
 	}
 	
 	public static PackData getPack(long id, long userId) {
-		return packs.find(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId)), PackData.class).first();
+		return packs.find(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId))).first();
 	}
 	
 	public static void duplicatePack(long id, long userId, long newId) {
@@ -60,8 +60,8 @@ public class PackDB {
 	
 	public static Texture getItem(long id, long userId, String path) {
 		String newPath = path.replace('/', '.');
-		PackData res = packs.find(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId)), PackData.class).limit(1).projection(Projections.include(newPath)).first();
-		if (res == null) return null;
+		PackData res = packs.find(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId))).limit(1).projection(Projections.include(newPath)).first();
+		if (res == null || res.data == null) return null;
 		Texture t = res.data.getEmbedded(Arrays.asList(StringUtils.split(newPath, '.')), Texture.class);
 		return t;
 	}

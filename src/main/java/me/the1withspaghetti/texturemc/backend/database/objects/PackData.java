@@ -9,8 +9,10 @@ public class PackData {
 	
 	public Document data;
 	
-	public PackData(long id, long userId, Document data) {
-		this._id = id;
+	public PackData() {}
+	
+	public PackData(long _id, long userId, Document data) {
+		this._id = _id;
 		this.userId = userId;
 		this.data = data;
 	}
