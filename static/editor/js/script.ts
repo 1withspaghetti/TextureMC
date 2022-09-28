@@ -99,7 +99,9 @@ $(()=>{
 })
 
 $(this).on("beforeunload", (e: BeforeUnloadEvent) => {
-    e.preventDefault();
-    e.returnValue = saveStatus ? "If you leave this page, you may lose unsaved changes" : null;
-    return e.returnValue;
+    if (saveStatus) {
+        e.preventDefault();
+        e.returnValue = "If you leave this page, you may lose unsaved changes";
+        return e.returnValue;
+    }
 })
