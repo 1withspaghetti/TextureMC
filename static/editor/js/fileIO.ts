@@ -1,3 +1,5 @@
+import JSZip from "jszip";
+
 function exportPack(id: string, name: string, fail?: (str: string) => void): void {
     $.ajax(`/packs/data/${id}/full`, {
         method: "GET",
@@ -40,6 +42,26 @@ function exportPack(id: string, name: string, fail?: (str: string) => void): voi
     })
 }
 
-function importPack(name: string, file: File): void {
-    
+function importPack(name: string, file: File, fail?: (str: string) => void): any {
+    // @ts-ignore
+    JSZip.loadAsync(file).then((zip: JSZip) => {
+        var metaFile = zip.file("pack.mcmeta");
+        if (!metaFile) {if (fail) fail("Could not read pack.mcmeta file"); return;}
+        metaFile.async("text").then(str=>{
+            var meta = JSON.parse(str);
+            var format = meta?.pack?.pack_format;
+            var name = file.name.replace(".zip","");
+            if (meta || format) {if (fail) fail("Invalid pack.mcmeta file"); return;}
+
+            var textures = zip.folder("assets/minecraft/textures");
+            var promises: Promise<void>[] = [];
+            var folder = (path: string, obj: JSZip.JSZipObject) => {
+                if (!obj.dir) {
+                    
+                } else {
+
+                }
+            }
+        });
+    });
 }
