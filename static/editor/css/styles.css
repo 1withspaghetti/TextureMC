@@ -85,6 +85,9 @@
 }
 
 .tool {
+    width: 65px;
+    height: 65px;
+    box-sizing: border-box;
     background-color: var(--item-bg-color);
     border: 3px solid var(--main-bg-color);
     padding: 10px;
@@ -94,9 +97,7 @@
 }
 
 .tool img {
-    image-rendering: pixelated;
     width: 100%;
-    height: 100%;
 }
 
 .tool:hover {
@@ -105,6 +106,12 @@
 
 .tool.selected {
     border: 3px solid var(--main-selection-color);
+}
+
+.image-upload {
+    display: block;
+    text-align: center;
+    margin: auto;
 }
 
 .color-selection {
@@ -137,7 +144,6 @@
 }
 
 .sp-preview {
-    border: none !important;
     box-sizing: border-box !important;
     width: 100% !important;
     height: 100% !important;

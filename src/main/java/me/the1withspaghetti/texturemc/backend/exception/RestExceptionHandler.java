@@ -19,6 +19,7 @@ public class RestExceptionHandler {
 	
 	@ExceptionHandler(ApiException.class)
 	public ResponseEntity<Object> handleApiException(ApiException ex) {
+		ex.printStackTrace();
 		return new ResponseEntity<Object>(new ErrorResponse(ex.getMessage()), ex.status);
 	}
 	

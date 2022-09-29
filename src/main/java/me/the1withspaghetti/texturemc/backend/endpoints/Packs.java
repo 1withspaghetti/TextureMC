@@ -28,7 +28,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import me.the1withspaghetti.texturemc.backend.database.AccountDB;
 import me.the1withspaghetti.texturemc.backend.database.AccountDB.Pack;
 import me.the1withspaghetti.texturemc.backend.database.PackDB;
+import me.the1withspaghetti.texturemc.backend.database.objects.PackData;
 import me.the1withspaghetti.texturemc.backend.database.objects.Texture;
+import me.the1withspaghetti.texturemc.backend.endpoints.clientbound.FullPackResponse;
 import me.the1withspaghetti.texturemc.backend.endpoints.clientbound.PackListResponse;
 import me.the1withspaghetti.texturemc.backend.endpoints.clientbound.Response;
 import me.the1withspaghetti.texturemc.backend.endpoints.clientbound.TextureResponse;
@@ -119,7 +121,7 @@ public class Packs {
 		if (version == null) throw new ApiException("Unknown Pack");
 		if (!VersionControl.isItem(version, path)) throw new ApiException("Unknown item");
 		
-		if (PackDB.insertItem(pack, session.userId, path, req)) throw new ApiException("Unknown Pack");
+		PackDB.insertItem(pack, session.userId, path, req);
 		
 		return new Response(true);
 	}
@@ -147,6 +149,21 @@ public class Packs {
 		}
 		
 		return new TextureResponse(item);
+	}
+	
+	@GetMapping("/data/{id}/full")
+	public static Response get(@CookieValue(value = "session_token", defaultValue = "") String token, @PathVariable(value="id") long id) throws IOException, SQLException {
+		SessionData session = SessionService.getSession(token);
+		if (session == null) throw new ApiException("Invalid Session");
+		
+		String version = AccountDB.getPackVersion(id, session.userId);
+		if (version == null) throw new ApiException("Unknown Pack");
+		int format = VersionControl.getFormat(version);
+		
+		PackData pack = PackDB.getFullPackData(id, session.userId);
+		if (pack == null) throw new ApiException("Unknown Pack");
+		
+		return new FullPackResponse(version, format, pack.data);
 	}
 	
 }

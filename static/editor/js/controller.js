@@ -35,6 +35,24 @@
         }
         $(document).trigger("tool.change", this.getAttribute("data-tool") || "pen");
     });
+    $("#image_upload").on("change", e => {
+        var files = $("#image_upload")[0].files;
+        if (!files || !files[0])
+            return;
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+        reader.onload = e => {
+            var _a;
+            var content = (_a = e.target) === null || _a === void 0 ? void 0 : _a.result;
+            if (typeof content != "string")
+                throw "Invalid result type";
+            console.log("Data url: " + content);
+            var img = document.createElement("img");
+            img.src = content;
+            img.onload = () => {
+            };
+        };
+    });
 })();
 (function () {
     const MAX_PALETTE = 9;

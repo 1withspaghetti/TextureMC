@@ -66,8 +66,13 @@ public class PackDB {
 		return t;
 	}
 	
-	public static boolean insertItem(long id, long userId, String path, Texture item) {
-		return packs.updateOne(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId)), Updates.set("data."+path.replace('/', '.'), item)).getMatchedCount() > 0;
+	public static void insertItem(long id, long userId, String path, Texture item) {
+		packs.updateOne(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId)), Updates.set("data."+path.replace('/', '.'), item));
+	}
+	
+	public static PackData getFullPackData(long id, long userId) {
+		PackData res = packs.find(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId))).limit(1).first();
+		return res;
 	}
 	
 	

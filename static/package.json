@@ -4,6 +4,7 @@
     "typescript": "^4.8.2"
   },
   "dependencies": {
+    "@types/jszip": "^3.4.1",
     "@types/spectrum": "^1.8.2"
   }
 }

@@ -74,3 +74,7 @@ function addPackEventListeners() {
     })
 }
 addPackEventListeners();
+
+$("#export_pack").on("click", e=>{
+    exportPack(currentPackId, currentPackName, (e)=>{alert("Error downloading pack: "+e)})
+})

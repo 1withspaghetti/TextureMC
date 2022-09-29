@@ -3,6 +3,7 @@ package me.the1withspaghetti.texturemc.backend.util;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 
 import org.bson.Document;
 
@@ -45,8 +46,14 @@ public class VersionControl {
 		return versionData.containsKey(version);
 	}
 	
+	public static int getFormat(String version) {
+		return formats.get(version);
+	}
+	
 	public static boolean isItem(String version, String path) {
-		return (versionData.get(version).getEmbedded(Arrays.asList(path.split("/")), Document.class) != null);
+		List<String> listPath = Arrays.asList(path.split("/"));
+		String name = listPath.set(listPath.size() - 1, "files");
+		return (versionData.get(version).getEmbedded(listPath, List.class).contains(name));
 	}
 	
 	public static Texture getItem(String version, String path) {

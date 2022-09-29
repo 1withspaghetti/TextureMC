@@ -16,7 +16,7 @@ function saveAsset(done?: (res: any) => void): void {
         return;
     }
     $("#save_status").text("Saving...");
-    $.ajax(`/packs/data/${packId}/upload?path=?path=${encodeURIComponent(currentPath)}`, {
+    $.ajax(`/packs/data/${packId}/upload?path=${encodeURIComponent(currentPath)}`, {
         method: "POST",
         dataType: "json",
         contentType: "application/json; charset=utf-8",
@@ -99,7 +99,7 @@ $(()=>{
 })
 
 $(this).on("beforeunload", (e: BeforeUnloadEvent) => {
-    if (saveStatus) {
+    if (!saveStatus) {
         e.preventDefault();
         e.returnValue = "If you leave this page, you may lose unsaved changes";
         return e.returnValue;

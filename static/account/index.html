@@ -7,6 +7,7 @@
   <link rel="stylesheet" type="text/css" href="/account/style.css">
   <script type="text/javascript" src="/lib/jszip.min.js"></script>
   <script type="text/javascript" src="/lib/FileSaver.min.js"></script>
+  <script type="text/javascript" src="/editor/js/fileIO.js"></script>
 </head>
 <body>
   <div th:replace="/index.html :: navbar"></div>
@@ -45,7 +46,7 @@
   </div>
   <div class="pack-context" id="pack_context_menu" style="display: none;">
     <a class="pack-context-item" open-modal="rename-pack"><i class="fa fa-pencil"></i>Rename</a>
-    <a class="pack-context-item" open-modal="download-pack"><i class="fa fa-download"></i>Download</a>
+    <a class="pack-context-item" id="export_pack"><i class="fa fa-download"></i>Download</a>
     <a class="pack-context-item" open-modal="duplicate-pack"><i class="fa fa-copy"></i>Duplicate</a>
     <a class="pack-context-item red" open-modal="delete-pack"><i class="fa fa-trash"></i>Delete</a>
   </div>
@@ -87,14 +88,6 @@
       <div class="notification" id="importPackNotification"></div>
       <div class="btn" modal-close>Cancel</div>
       <div class="btn primary">Import Pack</div>
-    </div>
-    <div class="modal" modal="download-pack">
-      <input type="hidden" name="id">
-      <h2>Export Texture Pack</h2>
-	    <p>Click the button below to download the pack <b id="confirmExportName"></b></p>
-      <div class="notification" id="confirmExportNotification"></div>
-      <div class="btn" modal-close>Cancel</div>
-      <div class="btn primary">Download</div>
     </div>
 
     <form class="modal refresh-packs-on-complete" modal="rename-pack" action="/packs/rename">

@@ -30,6 +30,24 @@
         }
         $(document).trigger("tool.change", this.getAttribute("data-tool") || "pen");
     });
+    $("#image_upload").on("change",e=>{
+        var files = ($("#image_upload")[0] as HTMLInputElement).files;
+        if (!files || !files[0]) return;
+        var reader = new FileReader();
+        reader.readAsDataURL(files[0]);
+        reader.onload = e => {
+            var content = e.target?.result;
+            if (typeof content != "string") throw "Invalid result type";
+            console.log("Data url: "+content)
+            var img = document.createElement("img");
+            img.src = content;
+            img.onload = () => {
+                // TODO prompt user for model to either replace the image or add onto it
+
+
+            }
+        }
+    })
 })();
 (function() {
     const MAX_PALETTE = 9;
