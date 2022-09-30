@@ -27,6 +27,7 @@ class Canvas {
         this.toolSize = 1;
         this.toolPixels = [];
         this.historyLock = null;
+        this.historyLockSize = null;
         this.historyPosition = -1;
         this.history = [];
         this.setImage = (base64) => {
@@ -76,9 +77,10 @@ class Canvas {
             this.historyLock = this.main.getImageData(0, 0, this.width, this.height).data;
         };
         this.saveHistory = () => {
-            if (!this.historyLock)
+            if (!this.historyLock || !this.historyLockSize)
                 throw "No save state to compare too";
             var history = [];
+            var historySize = undefined;
             var current = this.main.getImageData(0, 0, this.width, this.height).data;
             var lock = this.historyLock;
             if (lock.length != current.length)
@@ -93,11 +95,19 @@ class Canvas {
                     });
                 }
             }
-            if (history.length > 0) {
+            if (this.historyLockSize.x != canvas.width || this.historyLockSize.y != canvas.height) {
+                historySize = {
+                    x1: this.historyLockSize.x,
+                    x2: canvas.width,
+                    y1: this.historyLockSize.y,
+                    y2: canvas.height
+                };
+            }
+            if (history.length > 0 || historySize) {
                 if (this.historyPosition < this.history.length - 1) {
                     this.history = this.history.slice(0, this.historyPosition + 1);
                 }
-                this.history.push(history);
+                this.history.push(new HistoryElement(history));
                 this.historyPosition++;
                 $(document).trigger("canvas.saved", false);
             }
@@ -217,7 +227,7 @@ class Canvas {
             if (e.key == 'z' && e.ctrlKey) {
                 if (this.historyPosition >= 0) {
                     var changes = this.history[this.historyPosition];
-                    for (let pixel of changes) {
+                    for (let pixel of changes.pixels) {
                         this.main.fillStyle = pixel.o.toString();
                         setPixel(this.main, pixel.o, pixel.x, pixel.y);
                     }
@@ -231,7 +241,7 @@ class Canvas {
                 if (this.historyPosition < this.history.length - 1) {
                     this.historyPosition += 1;
                     var changes = this.history[this.historyPosition];
-                    for (let pixel of changes) {
+                    for (let pixel of changes.pixels) {
                         this.main.fillStyle = pixel.n.toString();
                         setPixel(this.main, pixel.n, pixel.x, pixel.y);
                     }
@@ -249,6 +259,15 @@ class Canvas {
             };
             this.updateTransform();
         });
+    }
+}
+class HistoryElement {
+    constructor(pixels, x1, x2, y1, y2) {
+        this.pixels = pixels;
+        this.x1 = x1;
+        this.x2 = x2;
+        this.y1 = y1;
+        this.y2 = y2;
     }
 }
 var canvas = new Canvas();

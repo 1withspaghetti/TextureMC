@@ -35,6 +35,7 @@
         }
         $(document).trigger("tool.change", this.getAttribute("data-tool") || "pen");
     });
+    var current_image_upload = null;
     $("#image_upload").on("change", e => {
         var files = $("#image_upload")[0].files;
         if (!files || !files[0])
@@ -48,11 +49,20 @@
                 throw "Invalid result type";
             console.log("Data url: " + content);
             var img = document.createElement("img");
-            img.src = content;
             img.onload = () => {
-                // TODO prompt user for model to either replace the image or add onto it
+                current_image_upload = img;
+                openModal("image_upload");
             };
+            img.src = content;
         };
+    });
+    $("#image_upload_add").on("click", e => {
+        canvas.lockHistory();
+        canvas.saveHistory();
+    });
+    $("#image_upload_replace").on("click", e => {
+        canvas.lockHistory();
+        canvas.saveHistory();
     });
 })();
 (function () {

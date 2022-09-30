@@ -30,8 +30,9 @@ class Canvas {
     toolSize: number = 1;
     toolPixels: Array<{x:number,y:number}> = [];
     historyLock: Uint8ClampedArray | null = null;
+    historyLockSize: {x: number, y: number} | null = null;
     historyPosition: number = -1;
-    history: {x: number, y: number, o: tinycolor.Instance, n: tinycolor.Instance}[][] = [];
+    history: HistoryElement[] = [];
 
     constructor() {
         var highlight = ($("#highlight")[0] as HTMLCanvasElement).getContext("2d");
@@ -135,7 +136,7 @@ class Canvas {
             if (e.key == 'z' && e.ctrlKey) {
                 if (this.historyPosition >= 0) {
                     var changes = this.history[this.historyPosition];
-                    for (let pixel of changes) {
+                    for (let pixel of changes.pixels) {
                         this.main.fillStyle = pixel.o.toString();
                         setPixel(this.main, pixel.o, pixel.x, pixel.y);
                     }
@@ -148,7 +149,7 @@ class Canvas {
                 if (this.historyPosition < this.history.length-1) {
                     this.historyPosition += 1;
                     var changes = this.history[this.historyPosition];
-                    for (let pixel of changes) {
+                    for (let pixel of changes.pixels) {
                         this.main.fillStyle = pixel.n.toString();
                         setPixel(this.main, pixel.n, pixel.x, pixel.y);
                     }
@@ -219,8 +220,9 @@ class Canvas {
         this.historyLock = this.main.getImageData(0, 0, this.width, this.height).data;
     };
     saveHistory = () => {
-        if (!this.historyLock) throw "No save state to compare too";
+        if (!this.historyLock || !this.historyLockSize) throw "No save state to compare too";
         var history: {x: number, y: number, o: tinycolor.Instance, n: tinycolor.Instance}[] = [];
+        var historySize: {x1: number, x2: number, y1: number, y2: number} | undefined = undefined;
         var current = this.main.getImageData(0, 0, this.width, this.height).data;
         var lock = this.historyLock;
         if (lock.length != current.length) throw "Trying to compare image data of different sizes";
@@ -235,11 +237,21 @@ class Canvas {
                     })
                 }
         }
-        if (history.length > 0) {
+
+        if (this.historyLockSize.x != canvas.width || this.historyLockSize.y != canvas.height) {
+            historySize = {
+                x1: this.historyLockSize.x,
+                x2: canvas.width,
+                y1: this.historyLockSize.y,
+                y2: canvas.height
+            }
+        }
+        
+        if (history.length > 0 || historySize) {
             if (this.historyPosition < this.history.length-1) {
                 this.history = this.history.slice(0, this.historyPosition+1);
             }
-            this.history.push(history);
+            this.history.push(new HistoryElement(history, historySize));
             this.historyPosition++;
             $(document).trigger("canvas.saved", false);
         }
@@ -265,6 +277,21 @@ class Canvas {
         var x = Math.floor((evt.clientX - rect.left) / (c.width / c.clientWidth * this.scale));
         var y = Math.floor((evt.clientY - rect.top) / (c.height / c.clientHeight * this.scale));
         return {x: x, y: y};
+    }
+}
+class HistoryElement {
+    pixels: {x: number, y: number, o: tinycolor.Instance, n: tinycolor.Instance}[];
+    x1: number;
+    x2: number;
+    y1: number;
+    y2: number;
+
+    constructor(pixels: {x: number, y: number, o: tinycolor.Instance, n: tinycolor.Instance}[], x1: number, x2: number, y1: number, y2: number) {
+        this.pixels = pixels;
+        this.x1 = x1;
+        this.x2 = x2;
+        this.y1 = y1;
+        this.y2 = y2;
     }
 }
 var canvas = new Canvas();

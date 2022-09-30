@@ -105,3 +105,14 @@ $(this).on("beforeunload", (e: BeforeUnloadEvent) => {
         return e.returnValue;
     }
 })
+
+function openModal(name: string) {
+    $("#modal_bg").show();
+    $(`[data-modal="${name}"]`).show();
+}
+$("#modal_bg, [data-modal-close]").on("click", e => {
+    if (e.target == e.currentTarget) {
+        $("#modal_bg").hide();
+        $("[data-modal]").hide();
+    }
+})
