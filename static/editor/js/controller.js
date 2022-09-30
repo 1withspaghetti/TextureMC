@@ -50,6 +50,7 @@
             var img = document.createElement("img");
             img.src = content;
             img.onload = () => {
+                // TODO prompt user for model to either replace the image or add onto it
             };
         };
     });

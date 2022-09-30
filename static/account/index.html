@@ -39,8 +39,8 @@
       <div id="packs-empty" th:style="${#lists.isEmpty(packs) ? 'display:block' : 'display:none'}">You don't have any packs yet<br>Click the button below to get started!</div><br>
       <div th:style="${!isMax ? 'display:block' : 'display:none'}">
         <label class="importpack green" open-modal="new-pack">&#10133; New Texture Pack</label>
-        <!--<label for="importPackFile" class="importpack">Import File</label>
-        <input type="file" class="hidden" id="importPackFile" accept=".zip" onchange="confirmImportPack()">-->
+        <label for="import_pack" class="importpack"><i class="fa fa-file"></i> Import from File</label>
+        <input type="file" class="hidden" id="import_pack" accept=".zip">
       </div>
     </div>
   </div>

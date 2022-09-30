@@ -78,3 +78,12 @@ addPackEventListeners();
 $("#export_pack").on("click", e=>{
     exportPack(currentPackId, currentPackName, (e)=>{alert("Error downloading pack: "+e)})
 })
+$("#import_pack").on("change", e=>{
+    var files = ($("#import_pack")[0] as HTMLInputElement).files;
+    if (!files || !files[0]) return;
+    importPack(files[0], (pack)=>{
+        console.log(pack)
+    }, msg=>{
+        console.error(msg);
+    })
+})

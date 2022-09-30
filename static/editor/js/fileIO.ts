@@ -1,5 +1,3 @@
-import JSZip from "jszip";
-
 function exportPack(id: string, name: string, fail?: (str: string) => void): void {
     $.ajax(`/packs/data/${id}/full`, {
         method: "GET",
@@ -42,26 +40,57 @@ function exportPack(id: string, name: string, fail?: (str: string) => void): voi
     })
 }
 
-function importPack(name: string, file: File, fail?: (str: string) => void): any {
+function importPack(file: File, done: (pack: any) => void, fail?: (str: string) => void) {
     // @ts-ignore
     JSZip.loadAsync(file).then((zip: JSZip) => {
         var metaFile = zip.file("pack.mcmeta");
         if (!metaFile) {if (fail) fail("Could not read pack.mcmeta file"); return;}
-        metaFile.async("text").then(str=>{
+        metaFile.async("text").then((str: string)=>{
             var meta = JSON.parse(str);
-            var format = meta?.pack?.pack_format;
-            var name = file.name.replace(".zip","");
-            if (meta || format) {if (fail) fail("Invalid pack.mcmeta file"); return;}
+            console.log(meta)
+            var format = meta.pack?.pack_format;
+            if (!meta || !format) {if (fail) fail("Invalid pack.mcmeta file"); return;}
+
+            var pack = {};
+            var promises: Promise<any>[] = [];
 
             var textures = zip.folder("assets/minecraft/textures");
-            var promises: Promise<void>[] = [];
-            var folder = (path: string, obj: JSZip.JSZipObject) => {
-                if (!obj.dir) {
-                    
-                } else {
+            if (textures == null) {if (fail) fail("Could not find textures folder"); return;}
 
+            textures.forEach((rPath: string, obj: any) => {
+                var name = rPath.substring(rPath.lastIndexOf('/')+1).replace('/','');
+                if (name.endsWith(".png")) {
+                    var promise = textures.file(rPath)?.async("base64").then((base64: string)=>{
+                        setEmbedded(pack, rPath.replace(".png","/img"), base64)
+                    });
+                    if (promise) promises.push(promise)
+                } else if (name.endsWith(".png.mcmeta")) {
+                    var promise = textures.file(rPath)?.async("text").then((text: string)=>{
+                        var meta = JSON.parse(text);
+                        setEmbedded(pack, rPath.replace(".png.mcmeta","/meta"), meta)
+                    });
+                    if (promise) promises.push(promise);
                 }
-            }
+            })
+
+            Promise.all(promises).then(()=>{
+                done(pack);
+            })
         });
     });
+}
+
+function setEmbedded(obj: any, pathStr: string, value: any): any {
+    var path = pathStr.split("/");
+    path.reduce((a, b, level) => {
+        if (typeof a[b] === "undefined" && level !== path.length - 1){
+            a[b] = {};
+            return a[b];
+        }
+        if (level == path.length - 1){
+            a[b] = value;
+            return value;
+        } 
+        return a[b];
+    }, obj);
 }
