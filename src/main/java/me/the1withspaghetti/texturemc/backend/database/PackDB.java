@@ -58,11 +58,11 @@ public class PackDB {
 		return packs.deleteOne(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId))).getDeletedCount() > 0;
 	}
 	
-	public static Texture getItem(long id, long userId, String path) {
+	public static Document getItem(long id, long userId, String path) {
 		String newPath = path.replace('/', '.');
-		PackData res = packs.find(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId))).limit(1).projection(Projections.include(newPath)).first();
+		PackData res = packs.find(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId))).limit(1).projection(Projections.include("data."+newPath)).first();
 		if (res == null || res.data == null) return null;
-		Texture t = res.data.getEmbedded(Arrays.asList(StringUtils.split(newPath, '.')), Texture.class);
+		Document t = res.data.getEmbedded(Arrays.asList(StringUtils.split(newPath, '.')), Document.class);
 		return t;
 	}
 	

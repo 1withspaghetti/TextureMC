@@ -2,6 +2,7 @@
 var packId;
 var packName;
 var packVersion;
+var assetList = [];
 var currentPath = "";
 var fileMeta;
 var saveStatus = true;
@@ -9,7 +10,7 @@ $("#save").on("click", e => {
     saveAsset();
 });
 function saveAsset(done) {
-    if (currentPath == "" || canvas.historyPosition == -1) {
+    if (saveStatus || currentPath == "") {
         if (done)
             done({});
         return;
@@ -26,6 +27,7 @@ function saveAsset(done) {
     }).done((res) => {
         if (res.success) {
             $(document).trigger("canvas.saved", true);
+            canvas.savedHistoryPosition = canvas.historyPosition;
             if (done)
                 done(res);
         }
@@ -57,10 +59,14 @@ function getPath(elm) {
 }
 function onFileChange(e) {
     saveAsset(() => {
+        $("#texture_search")[0].blur();
         var name = e.currentTarget.getAttribute("name") || "";
         currentPath = name;
         $("file.selected").removeClass("selected");
-        e.currentTarget.classList.add("selected");
+        $(`file[name="${name}"]`).addClass("selected").parents("folder").each((i, e) => {
+            var id = $(e).addClass("open").attr("name");
+            $(`folder-label[for="${id}"]`).addClass("open");
+        });
         $.getJSON(`/packs/data/${packId}/get?path=${encodeURIComponent(name)}`, (json) => {
             if (json.data.meta)
                 fileMeta = json.meta;
@@ -89,17 +95,17 @@ $(() => {
             for (let file of json["files"]) {
                 var img = $("<img/>").attr("src", `/assets/${packVersion}/${name}${file}.png`).attr("loading", "lazy");
                 folder.append($("<file/>").attr("name", name + file).append(img).append($("<span/>").text(file)).on("click", onFileChange));
+                assetList.push(name + file);
             }
         }
     }
     $.getJSON(`/assets/${packVersion}.json`, (tree) => {
-        console.log(tree);
-        genFolder(tree, $(".filetree"), "");
-        $(".filetree").css("visibility", "visible");
+        genFolder(tree, $("#filetree"), "");
+        $("#filetree").css("visibility", "visible");
     });
 });
 $(this).on("beforeunload", (e) => {
-    if (!saveStatus) {
+    if (!saveStatus && currentPath != "") {
         e.preventDefault();
         e.returnValue = "If you leave this page, you may lose unsaved changes";
         return e.returnValue;
@@ -109,9 +115,32 @@ function openModal(name) {
     $("#modal_bg").show();
     $(`[data-modal="${name}"]`).show();
 }
+function closeModal() {
+    $("#modal_bg").hide();
+    $("[data-modal]").hide();
+}
 $("#modal_bg, [data-modal-close]").on("click", e => {
     if (e.target == e.currentTarget) {
         $("#modal_bg").hide();
         $("[data-modal]").hide();
+    }
+});
+$("#texture_search").on("input", e => {
+    var term = $("#texture_search").val();
+    if (!term || term == "") {
+        $("#filetree").show();
+        $("#searchtree").hide().html("");
+    }
+    else {
+        $("#filetree").hide();
+        $("#searchtree").show().html("");
+        // @ts-ignore
+        var result = stringSimilarity.findBestMatch(term, assetList);
+        result.ratings.sort((a, b) => { return b.rating - a.rating; });
+        for (let item of result.ratings.splice(0, 25)) {
+            var name = item.target.substring(item.target.lastIndexOf("/") + 1);
+            var img = $("<img/>").attr("src", `/assets/${packVersion}/${item.target}.png`).attr("loading", "lazy");
+            $("#searchtree").append($("<file/>").attr("name", item.target).append(img).append($("<span/>").text(name)).on("click", onFileChange));
+        }
     }
 });

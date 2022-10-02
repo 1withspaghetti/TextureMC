@@ -7,6 +7,7 @@
   <link rel='stylesheet' href='/editor/libs/spectrum.css'/>
   <script src='/editor/libs/spectrum.js'></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script src="//unpkg.com/string-similarity/umd/string-similarity.min.js"></script>
 </head>
 <body>
   <div th:replace="/index.html :: navbar"></div>
@@ -17,11 +18,17 @@
           <span th:text="${pack_name}">Pack Name</span>
           <span class="version" th:text="${pack_version}">1.19.2</span>
         </div>
-        <div class="save" id="save">
+        <span class="save" id="save">
           <i class="fa fa-save"></i> <span id="save_status">Saved</span>
-        </div>
+        </span>
       </div>
-      <div class="filetree" style="visibility: hidden;">
+      <div class="pack" style="display: flex; font-size: 21px;">
+        <i class="fa fa-search" aria-hidden="true"></i>
+        <input type="text" placeholder="Search textures..." id="texture_search" class="textInput search">
+      </div>
+      <div class="filetree" id="filetree" style="visibility: hidden;">
+      </div>
+      <div class="filetree" id="searchtree" style="display: none;">
       </div>
     </div>
     <div class="editor-container">
@@ -41,10 +48,9 @@
           <div class="tool" data-tool="box" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/box_tool.svg"></div>
           <div class="tool" data-tool="variation" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/variation_tool.svg"></div>
         </div>
-        <div class="image-upload">
-          <label for="image_upload"><img src="/editor/imgs/upload.svg" width="32" height="32"></label>
-          <input id="image_upload" type="file" accept="image/*" style="display:none;">
-        </div>
+        <label class="tool-setting" for="image_upload"><img src="/editor/imgs/upload.svg" width="32" height="32"></label>
+        <input id="image_upload" type="file" accept="image/*" style="display:none;">
+        <div class="tool-setting" id="image_resize"><img src="/editor/imgs/resize.svg" width="32" height="32"></div>
       </div>
       <div id="camera" style="cursor: url('/editor/imgs/pen_cursor.png') 0 16, default;">
         <div id="pos_container">
@@ -57,7 +63,7 @@
   </div>
   <div class="modal-bg" id="modal_bg" style="display: none;">
     <div class="modal" data-modal="image_upload" style="display: none;">
-      <h2>How would you like to import this image?</h2>
+      <h3>How would you like to import this image?</h3>
       <div style="display: flex;">
         <div class="modal-option" id="image_upload_add">
           <img src="/editor/imgs/image_append.svg">
@@ -69,6 +75,21 @@
         </div>
       </div>
       <div class="btn" data-modal-close>Cancel</div>
+    </div>
+    <div class="modal" data-modal="image_resize" style="display: none;">
+      <h3>Resize your texture</h3>
+      <div>
+        <label for="image_resize_width">Width: </label>
+        <input type="text" id="image_resize_width" class="textInput"><br>
+        <label for="image_resize_height">Height: </label>
+        <input type="text" id="image_resize_height" class="textInput"><br>
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <span type="checkbox" id="image_resize_ratio" class="checkbox checked"></span>
+          <span> Keep 1:1 Aspect Ratio</span>
+        </div>
+      </div>
+      <div class="btn" data-modal-close>Close</div>
+      <div class="btn primary" id="image_resize_done">Resize</div>
     </div>
   </div>
   <script src="/editor/js/tools.js"></script>

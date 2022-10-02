@@ -29,6 +29,7 @@ class Canvas {
         this.historyLock = null;
         this.historyLockSize = null;
         this.historyPosition = -1;
+        this.savedHistoryPosition = -1;
         this.history = [];
         this.setImage = (base64) => {
             var img = document.createElement("img");
@@ -55,26 +56,27 @@ class Canvas {
         this.getImage = () => {
             return this.main.canvas.toDataURL("image/png").replace("data:image/png;base64,", "");
         };
-        /*setSize = (width: number, height: number) => {
+        this.setSize = (width, height) => {
             this.width = width;
             this.height = height;
-            $("canvas").each((i,e)=>{
-                var c = e as HTMLCanvasElement;
+            $("#pos_container canvas").each((i, e) => {
+                var c = e;
                 c.width = width;
                 c.height = height;
-            })
+            });
             this.containerPos = {
-                "x": (this.camera.width()||0)/2 - ((this.width||0)*this.scale/2),
-                "y": (this.camera.height()||0)/2 - ((this.width||0)*this.scale/2)
+                "x": (this.camera.width() || 0) / 2 - ((this.width || 0) * this.scale / 2),
+                "y": (this.camera.height() || 0) / 2 - ((this.width || 0) * this.scale / 2)
             };
             this.updateTransform();
-        };*/
+        };
         this.clearPreview = () => {
             this.preview.clearRect(0, 0, this.width, this.height);
             this.highlight.clearRect(0, 0, this.width, this.height);
         };
         this.lockHistory = () => {
             this.historyLock = this.main.getImageData(0, 0, this.width, this.height).data;
+            this.historyLockSize = { x: canvas.width, y: canvas.height };
         };
         this.saveHistory = () => {
             if (!this.historyLock || !this.historyLockSize)
@@ -82,17 +84,23 @@ class Canvas {
             var history = [];
             var historySize = undefined;
             var current = this.main.getImageData(0, 0, this.width, this.height).data;
+            var currentSize = { x: this.width, y: this.height };
             var lock = this.historyLock;
-            if (lock.length != current.length)
-                throw "Trying to compare image data of different sizes";
-            for (let i = 0; i < current.length; i += 4) {
-                if (lock[i] != current[i] || lock[i + 1] != current[i + 1] || lock[i + 2] != current[i + 2] || lock[i + 3] != current[i + 3]) {
-                    history.push({
-                        x: (i / 4) % this.width,
-                        y: Math.floor(i / 4 / this.width),
-                        o: tinycolor({ r: lock[i], g: lock[i + 1], b: lock[i + 2], a: lock[i + 3] }),
-                        n: tinycolor({ r: current[i], g: current[i + 1], b: current[i + 2], a: current[i + 3] })
-                    });
+            var lockSize = this.historyLockSize;
+            for (let y = 0; y < Math.max(lockSize.y, this.height); y++) {
+                for (let x = 0; x < Math.max(lockSize.x, this.width); x++) {
+                    var o = (x < lockSize.x && y < lockSize.y ? (y * lockSize.x * 4) + (x * 4) : -1);
+                    var n = (x < currentSize.x && y < currentSize.y ? (y * currentSize.x * 4) + (x * 4) : -1);
+                    var oArr = o != -1 ? lock.subarray(o, o + 4) : null;
+                    var nArr = n != -1 ? current.subarray(n, n + 4) : null;
+                    if (oArr != nArr) {
+                        history.push({
+                            x: x,
+                            y: y,
+                            o: oArr ? tinycolor({ r: oArr[0], g: oArr[1], b: oArr[2], a: oArr[3] }) : tinycolor({ r: 255, g: 0, b: 0, a: 255 }),
+                            n: nArr ? tinycolor({ r: nArr[0], g: nArr[1], b: nArr[2], a: nArr[3] }) : tinycolor({ r: 255, g: 0, b: 0, a: 255 })
+                        });
+                    }
                 }
             }
             if (this.historyLockSize.x != canvas.width || this.historyLockSize.y != canvas.height) {
@@ -107,7 +115,7 @@ class Canvas {
                 if (this.historyPosition < this.history.length - 1) {
                     this.history = this.history.slice(0, this.historyPosition + 1);
                 }
-                this.history.push(new HistoryElement(history));
+                this.history.push(new HistoryElement(history, historySize));
                 this.historyPosition++;
                 $(document).trigger("canvas.saved", false);
             }
@@ -139,6 +147,7 @@ class Canvas {
         this.highlight = highlight;
         this.preview = preview;
         this.main = main;
+        main.getContextAttributes().willReadFrequently = true;
         preview.fillStyle = "rgb(0, 0, 0)";
         main.fillStyle = "rgb(0, 0, 0)";
         highlight.fillStyle = "rgb(255, 255, 255)";
@@ -225,28 +234,32 @@ class Canvas {
             this.active = false;
         }).on("keydown", (e) => {
             if (e.key == 'z' && e.ctrlKey) {
+                e.preventDefault();
                 if (this.historyPosition >= 0) {
                     var changes = this.history[this.historyPosition];
                     for (let pixel of changes.pixels) {
                         this.main.fillStyle = pixel.o.toString();
                         setPixel(this.main, pixel.o, pixel.x, pixel.y);
                     }
+                    if (changes.size)
+                        this.setSize(changes.size.x1, changes.size.y1);
                     this.historyPosition -= 1;
                 }
-                else {
-                    $(document).trigger("canvas.saved", true);
-                }
+                $(document).trigger("canvas.saved", this.historyPosition == this.savedHistoryPosition);
             }
             else if (e.key == 'y' && e.ctrlKey) {
+                e.preventDefault();
                 if (this.historyPosition < this.history.length - 1) {
                     this.historyPosition += 1;
                     var changes = this.history[this.historyPosition];
+                    if (changes.size)
+                        this.setSize(changes.size.x2, changes.size.y2);
                     for (let pixel of changes.pixels) {
                         this.main.fillStyle = pixel.n.toString();
                         setPixel(this.main, pixel.n, pixel.x, pixel.y);
                     }
-                    $(document).trigger("canvas.saved", false);
                 }
+                $(document).trigger("canvas.saved", this.historyPosition == this.savedHistoryPosition);
             }
         });
         window.addEventListener('resize', () => {
@@ -262,12 +275,9 @@ class Canvas {
     }
 }
 class HistoryElement {
-    constructor(pixels, x1, x2, y1, y2) {
+    constructor(pixels, size) {
         this.pixels = pixels;
-        this.x1 = x1;
-        this.x2 = x2;
-        this.y1 = y1;
-        this.y2 = y2;
+        this.size = size;
     }
 }
 var canvas = new Canvas();

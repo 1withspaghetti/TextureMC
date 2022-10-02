@@ -31,7 +31,7 @@
         $(document).trigger("tool.change", this.getAttribute("data-tool") || "pen");
     });
 
-    var current_image_upload: HTMLImageElement | null = null;
+    var current_image: HTMLImageElement | null = null;
     $("#image_upload").on("change",e=>{
         var files = ($("#image_upload")[0] as HTMLInputElement).files;
         if (!files || !files[0]) return;
@@ -40,25 +40,57 @@
         reader.onload = e => {
             var content = e.target?.result;
             if (typeof content != "string") throw "Invalid result type";
-            console.log("Data url: "+content)
             var img = document.createElement("img");
             img.onload = () => {
-                current_image_upload = img;
+                current_image = img;
                 openModal("image_upload");
             }
             img.src = content;
         }
     })
     $("#image_upload_add").on("click",e=>{
+        if (!current_image) throw "Image upload fired with no uploaded image";
         canvas.lockHistory();
-
+        canvas.main.drawImage(current_image, 0, 0)
         canvas.saveHistory();
+        closeModal();
     })
     $("#image_upload_replace").on("click",e=>{
+        if (!current_image) throw "Image upload fired with no uploaded image";
         canvas.lockHistory();
-
+        canvas.setSize(current_image.width, current_image.height);
+        canvas.main.clearRect(0, 0, canvas.width, canvas.height);
+        canvas.main.drawImage(current_image, 0, 0)
         canvas.saveHistory();
+
+        closeModal();
     })
+
+    $("#image_resize").on("click", e=>{
+        openModal("image_resize");
+        $("#image_resize_width").val(canvas.width);
+        $("#image_resize_height").val(canvas.height);
+    })
+    $("#image_resize_width").on("input", e=>{
+        var elm = $("#image_resize_width");
+        elm.val((elm.val() as string).replace(/[^0-9]/g, "").substring(0, 3));
+        if ($("#image_resize_ratio").hasClass("checked")) $("#image_resize_height").val((elm.val() as string))
+    });
+    $("#image_resize_height").on("input", e=>{
+        var elm = $("#image_resize_height");
+        elm.val((elm.val() as string).replace(/[^0-9]/g, "").substring(0, 3));
+        if ($("#image_resize_ratio").hasClass("checked")) $("#image_resize_width").val((elm.val() as string))
+    });
+    $("#image_resize_ratio").on("click", e=>{
+        $("#image_resize_ratio").toggleClass("checked");
+    });
+    $("#image_resize_done").on("click", e=>{
+        var width = parseInt($("#image_resize_width").val() as string);
+        var height = parseInt($("#image_resize_height").val() as string);
+        canvas.lockHistory();
+        canvas.setSize(Math.min(width,256), Math.min(height,256));
+        canvas.saveHistory();
+    });
 })();
 (function() {
     const MAX_PALETTE = 9;

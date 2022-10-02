@@ -8,6 +8,7 @@ import java.util.Random;
 
 import javax.validation.constraints.Pattern;
 
+import org.bson.Document;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
@@ -133,7 +134,7 @@ public class Packs {
 		
 		System.out.println("GET path: "+path+" pack: "+pack+" userId: "+session.userId);
 		
-		Texture item = PackDB.getItem(pack, session.userId, path);
+		Document item = PackDB.getItem(pack, session.userId, path);
 		if (item == null) {
 			String version = AccountDB.getPackVersion(pack, session.userId);
 			if (version == null) throw new ApiException("Unknown Pack");
@@ -142,7 +143,7 @@ public class Packs {
 			System.out.println(file.getPath());
 			if (!file.exists()) throw new ApiException("Unknown Item");
 			
-			Texture t = mapper.readValue(file, Texture.class);
+			Document t = mapper.readValue(file, Document.class);
 			if (t == null) throw new ApiException("Unknown Item");
 			
 			return new TextureResponse(t);
