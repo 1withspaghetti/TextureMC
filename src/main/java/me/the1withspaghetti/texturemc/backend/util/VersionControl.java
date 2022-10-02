@@ -15,7 +15,7 @@ public class VersionControl {
 	public static HashMap<String, Integer> formats = new HashMap<>();
 	
 	private static final String[] VERSIONS = {
-			/*"1.8.9","1",
+			"1.8.9","1",
 			"1.9.3","2",
 			"1.10.2","2",
 			"1.11.2","3",
@@ -25,7 +25,7 @@ public class VersionControl {
 			"1.15.2","5",
 			"1.16.5","6",
 			"1.17.1","7",
-			"1.18.1","8"*/
+			"1.18.2","8",
 			"1.19.1","9",
 			"1.19.2","9"
 	};
