@@ -6,12 +6,15 @@ import static org.bson.codecs.configuration.CodecRegistries.fromRegistries;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.bson.Document;
 import org.bson.codecs.configuration.CodecProvider;
 import org.bson.codecs.configuration.CodecRegistry;
 import org.bson.codecs.pojo.PojoCodecProvider;
+import org.bson.conversions.Bson;
 
 import com.google.gson.Gson;
 import com.mongodb.client.MongoClient;
@@ -68,6 +71,14 @@ public class PackDB {
 	
 	public static void insertItem(long id, long userId, String path, Texture item) {
 		packs.updateOne(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId)), Updates.set("data."+path.replace('/', '.'), item));
+	}
+	
+	public static void insertItems(long id, long userId, Map<String, Texture> items) {
+		LinkedList<Bson> updates = new LinkedList<>();
+		items.forEach((path, t) -> {
+			updates.push(Updates.set("data."+path.replace('/', '.'), t));
+		});
+		packs.updateOne(Filters.and(Filters.eq("_id", id), Filters.eq("userId", userId)), updates);
 	}
 	
 	public static PackData getFullPackData(long id, long userId) {

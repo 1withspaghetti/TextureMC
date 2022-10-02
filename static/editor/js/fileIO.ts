@@ -40,18 +40,19 @@ function exportPack(id: string, name: string, fail?: (str: string) => void): voi
     })
 }
 
-function importPack(file: File, done: (pack: any) => void, fail?: (str: string) => void) {
+function importPack(file: File, done: (name: string, format: number, pack: any) => void, fail?: (str: string) => void) {
     // @ts-ignore
     JSZip.loadAsync(file).then((zip: JSZip) => {
         var metaFile = zip.file("pack.mcmeta");
         if (!metaFile) {if (fail) fail("Could not read pack.mcmeta file"); return;}
         metaFile.async("text").then((str: string)=>{
             var meta = JSON.parse(str);
-            console.log(meta)
+
             var format = meta.pack?.pack_format;
             if (!meta || !format) {if (fail) fail("Invalid pack.mcmeta file"); return;}
+            var name = file.name.replace(".zip","").substring(0,25);
 
-            var pack = {};
+            var pack: any = {};
             var promises: Promise<any>[] = [];
 
             var textures = zip.folder("assets/minecraft/textures");
@@ -61,20 +62,24 @@ function importPack(file: File, done: (pack: any) => void, fail?: (str: string) 
                 var name = rPath.substring(rPath.lastIndexOf('/')+1).replace('/','');
                 if (name.endsWith(".png")) {
                     var promise = textures.file(rPath)?.async("base64").then((base64: string)=>{
-                        setEmbedded(pack, rPath.replace(".png","/img"), base64)
+                        var p = rPath.replace(".png","");
+                        if (!pack[p]) pack[p] = {};
+                        pack[p].img = base64;
                     });
                     if (promise) promises.push(promise)
                 } else if (name.endsWith(".png.mcmeta")) {
                     var promise = textures.file(rPath)?.async("text").then((text: string)=>{
                         var meta = JSON.parse(text);
-                        setEmbedded(pack, rPath.replace(".png.mcmeta","/meta"), meta)
+                        var p = rPath.replace(".png.mcmeta","");
+                        if (!pack[p]) pack[p] = {};
+                        pack[p].meta = meta;
                     });
                     if (promise) promises.push(promise);
                 }
             })
 
             Promise.all(promises).then(()=>{
-                done(pack);
+                done(name, format, pack);
             })
         });
     });

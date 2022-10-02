@@ -55,13 +55,13 @@ function importPack(file, done, fail) {
         metaFile.async("text").then((str) => {
             var _a;
             var meta = JSON.parse(str);
-            console.log(meta);
             var format = (_a = meta.pack) === null || _a === void 0 ? void 0 : _a.pack_format;
             if (!meta || !format) {
                 if (fail)
                     fail("Invalid pack.mcmeta file");
                 return;
             }
+            var name = file.name.replace(".zip", "").substring(0, 25);
             var pack = {};
             var promises = [];
             var textures = zip.folder("assets/minecraft/textures");
@@ -75,7 +75,10 @@ function importPack(file, done, fail) {
                 var name = rPath.substring(rPath.lastIndexOf('/') + 1).replace('/', '');
                 if (name.endsWith(".png")) {
                     var promise = (_a = textures.file(rPath)) === null || _a === void 0 ? void 0 : _a.async("base64").then((base64) => {
-                        setEmbedded(pack, rPath.replace(".png", "/img"), base64);
+                        var p = rPath.replace(".png", "");
+                        if (!pack[p])
+                            pack[p] = {};
+                        pack[p].img = base64;
                     });
                     if (promise)
                         promises.push(promise);
@@ -83,14 +86,17 @@ function importPack(file, done, fail) {
                 else if (name.endsWith(".png.mcmeta")) {
                     var promise = (_b = textures.file(rPath)) === null || _b === void 0 ? void 0 : _b.async("text").then((text) => {
                         var meta = JSON.parse(text);
-                        setEmbedded(pack, rPath.replace(".png.mcmeta", "/meta"), meta);
+                        var p = rPath.replace(".png.mcmeta", "");
+                        if (!pack[p])
+                            pack[p] = {};
+                        pack[p].meta = meta;
                     });
                     if (promise)
                         promises.push(promise);
                 }
             });
             Promise.all(promises).then(() => {
-                done(pack);
+                done(name, format, pack);
             });
         });
     });

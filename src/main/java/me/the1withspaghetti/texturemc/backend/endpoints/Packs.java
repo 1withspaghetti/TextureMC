@@ -3,7 +3,9 @@ package me.the1withspaghetti.texturemc.backend.endpoints;
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 import java.util.Random;
 
 import javax.validation.constraints.Pattern;
@@ -25,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.exc.StreamReadException;
 import com.fasterxml.jackson.databind.DatabindException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import me.the1withspaghetti.texturemc.backend.database.AccountDB;
 import me.the1withspaghetti.texturemc.backend.database.AccountDB.Pack;
 import me.the1withspaghetti.texturemc.backend.database.PackDB;
@@ -37,6 +38,7 @@ import me.the1withspaghetti.texturemc.backend.endpoints.clientbound.Response;
 import me.the1withspaghetti.texturemc.backend.endpoints.clientbound.TextureResponse;
 import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.BasicPackRequest;
 import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.CreatePackRequest;
+import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.ImportPackRequest;
 import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.RenamePackRequest;
 import me.the1withspaghetti.texturemc.backend.exception.ApiException;
 import me.the1withspaghetti.texturemc.backend.service.SessionService;
@@ -165,6 +167,32 @@ public class Packs {
 		if (pack == null) throw new ApiException("Unknown Pack");
 		
 		return new FullPackResponse(version, format, pack.data);
+	}
+	
+	@SuppressWarnings("unused")
+	@PostMapping("/upload")
+	public static Response get(@CookieValue(value = "session_token", defaultValue = "") String token, @Validated @RequestBody ImportPackRequest req) throws SQLException {
+		SessionData session = SessionService.getSession(token);
+		if (session == null) throw new ApiException("Invalid Session");
+		
+		String version = VersionControl.getVersion(req.format);
+		if (version == null) throw new ApiException("Invalid Version");
+		
+		if (req.data.isEmpty()) throw new ApiException("You cannot import an empty pack!");
+		
+		Iterator<Entry<String, Texture>> it = req.data.entrySet().iterator();
+		while (it.hasNext()) {
+			if (!VersionControl.isItem(version, it.next().getKey())) it.remove();
+		}
+		
+		if (req.data.isEmpty()) throw new ApiException("Pack contains invalid items");
+		
+		long id = rand.nextLong();
+		AccountDB.addPack(id, session.userId, req.name, version);
+		PackDB.createPack(id, session.userId);
+		PackDB.insertItems(id, session.userId, req.data);
+		
+		return new Response(true);
 	}
 	
 }

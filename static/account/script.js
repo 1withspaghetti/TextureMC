@@ -35,7 +35,7 @@ $("#logout").on("click", e => {
 });
 function refreshPacks() {
     $.ajax("/packs/list", { dataType: "json" }).done((res) => {
-        $("#packs").html();
+        $("#packs").html("");
         for (let pack of res.packs) {
             $("#packs").append(`<div class="pack" data-pack="${pack.id}" data-pack-name="${pack.name}">
                 <div class="pack-row"><span class="pack-name">${pack.name}</span><img class="pack-settings" src="/account/imgs/set.svg"></div>
@@ -80,8 +80,27 @@ $("#import_pack").on("change", e => {
     var files = $("#import_pack")[0].files;
     if (!files || !files[0])
         return;
-    importPack(files[0], (pack) => {
-        console.log(pack);
+    importPack(files[0], (name, format, pack) => {
+        $.ajax("/packs/upload", {
+            method: "POST",
+            data: JSON.stringify({
+                name: name,
+                format: format,
+                data: pack
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json"
+        }).done(res => {
+            if (res.success) {
+                refreshPacks();
+            }
+            else {
+                console.error(res.reason || "Unknown error while uploading pack");
+            }
+        }).fail(res => {
+            var _a;
+            console.error(((_a = res.responseJSON) === null || _a === void 0 ? void 0 : _a.reason) || "Unknown Server Error: " + res.status);
+        });
     }, msg => {
         console.error(msg);
     });
