@@ -11,7 +11,6 @@ import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
 import me.the1withspaghetti.texturemc.backend.database.AccountDB;
 import me.the1withspaghetti.texturemc.backend.database.PackDB;
 import me.the1withspaghetti.texturemc.backend.service.MailService;
-import me.the1withspaghetti.texturemc.backend.util.ConsoleCommands;
 import me.the1withspaghetti.texturemc.backend.util.VersionControl;
 
 @SpringBootApplication(exclude = {MongoAutoConfiguration.class, MongoDataAutoConfiguration.class})
@@ -22,7 +21,6 @@ public class TextureMcBackendApplication {
 		PackDB.init();
 		MailService.init();
 		VersionControl.init();
-		ConsoleCommands.init(System.in);
 		SpringApplication.run(TextureMcBackendApplication.class, args);
 		
 	}

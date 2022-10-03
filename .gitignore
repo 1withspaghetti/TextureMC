@@ -1,7 +1,7 @@
 .settings/
 target/
 other/
-static/assets/
+assets/
 static/node_modules/
 *.env
 *.properties

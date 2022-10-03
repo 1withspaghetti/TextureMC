@@ -19,11 +19,16 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    	String filePath = "file:"+this.filePath+"static"+File.separator;
+    	String staticFilePath = "file:"+this.filePath+"static"+File.separator;
+    	String assetFilePath = "file:"+this.filePath+"assets"+File.separator;
+    	registry.addResourceHandler("/assets/**")
+			.addResourceLocations(staticFilePath)
+			.setCachePeriod(1800);
         registry.addResourceHandler("/**")
-			.addResourceLocations(filePath)
-			.setCachePeriod(0);
-        System.out.println("Serving files from: "+filePath);
+			.addResourceLocations(assetFilePath)
+			.setCachePeriod(60);
+        System.out.println("Serving static files from: "+staticFilePath);
+        System.out.println("Serving asset files from: "+assetFilePath);
     }
     
     @Bean
