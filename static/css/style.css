@@ -77,10 +77,14 @@ html, body {
 @media (max-width: 1000px) {
 
     .panel {
-        margin: 0rem;
+        margin: 15px;
         flex-direction: column;
     }
     .panel-text {
         max-width: 70%;
+    }
+
+    .mobile-hide {
+        display: none;
     }
 }

@@ -41,6 +41,10 @@ body {
     justify-content: center;
 }
 
+.username h3 {
+    margin: 5px 0;
+}
+
 .username img {
     width: 1rem;
     padding: 0.2rem;

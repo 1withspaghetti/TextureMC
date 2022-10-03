@@ -28,6 +28,13 @@ $('form').on("submit", (e)=>{
         }
     }
 
+    for (let i of $(".checkbox[required]")) {
+        if (!i.classList.contains("checked")) {
+            messages.text(i.getAttribute("msg") || "Checkbox must be checked!").fadeIn(250).delay(3000).fadeOut(250);
+            return;
+        }
+    }
+
     $.ajax(form.attr("action") || location.href, {
         method: "POST",
         data: JSON.stringify(req),
@@ -44,3 +51,7 @@ $('form').on("submit", (e)=>{
         messages.text(res.responseJSON?.reason || "Unknown Server Error: "+res.status).fadeIn(250).delay(3000).fadeOut(250);
     });
 })
+
+$(".checkbox").on("click", e=>{
+    e.currentTarget.classList.toggle("checked");
+});

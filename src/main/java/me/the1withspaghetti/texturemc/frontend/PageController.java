@@ -87,7 +87,8 @@ public class PageController {
 		else {
 			session = SessionService.getUnverifiedSession(token);
 			if (session == null) return "redirect:/login/";
-			model.addAttribute("error", "You need to verify your account! Check your email (and spam folder) for a message.");
+			model.addAttribute("error", "You need to verify your account!");
+			model.addAttribute("error_extra", "Check your email (and spam folder) for a message.");
 			return "error";
 		}
 		

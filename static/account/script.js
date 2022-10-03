@@ -4,12 +4,13 @@ var currentPackName = "";
 $(document).on("click", e => {
     if ($(e.target).closest(".pack-settings").length == 0) {
         $("#pack_context_menu").attr("data-pack", "").offset({ top: 0, left: 0 }).hide();
+        currentPackId = "";
     }
 });
 $("[open-modal]").on("click", e => {
     var modal = $(`[modal="${$(e.currentTarget).attr("open-modal")}"]`).show();
     modal.children(`input[name="id"]`).val(currentPackId);
-    modal.children(`[modal-pack-name]`).text(currentPackName);
+    $(`[modal-pack-name]`).text(currentPackName);
     $("#modal-bg").show();
 });
 $("#modal-bg, [modal-close]").on("click", e => {
