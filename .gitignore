@@ -7,3 +7,4 @@ static/node_modules/
 *.properties
 texturemc_accounts.db
 *.secret
+branding/

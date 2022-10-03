@@ -41,6 +41,8 @@ import me.the1withspaghetti.texturemc.backend.util.UniqueIdGenerator;
 @CrossOrigin(origins = "*", methods= {RequestMethod.POST, RequestMethod.GET})
 public class Accounts {
 	
+	public static final boolean SECURE_COOKIES = false;
+	
 	UniqueIdGenerator uniqueIdGenerator = new UniqueIdGenerator();
 	SecureRandom rand = new SecureRandom();
 	
@@ -59,7 +61,7 @@ public class Accounts {
 		
 		UUID session = SessionService.newSession(id, false);
 		Cookie token = new Cookie("session_token", session.toString());
-		token.setSecure(false);
+		token.setSecure(SECURE_COOKIES);
 		token.setPath("/");
 		token.setMaxAge((int) TimeUnit.HOURS.toSeconds(1));
 		res.addCookie(token);
@@ -75,7 +77,7 @@ public class Accounts {
 		
 		UUID session = SessionService.newSession(user.id, user.verified);
 		Cookie token = new Cookie("session_token", session.toString());
-		token.setSecure(false);
+		token.setSecure(SECURE_COOKIES);
 		token.setPath("/");
 		token.setMaxAge((int) TimeUnit.HOURS.toSeconds(1));
 		res.addCookie(token);
@@ -83,7 +85,7 @@ public class Accounts {
 	}
 	
 	@GetMapping("/heartbeat")
-	public Response heartbeat(@CookieValue(value = "session_token", defaultValue = "") String token) {
+	public Response heartbeat(@CookieValue(value = "session_token", defaultValue = "") String token, HttpServletResponse res) {
 		SessionData session = SessionService.getSession(token);
 		if (session == null) {
 			session = SessionService.getUnverifiedSession(token);
@@ -91,6 +93,12 @@ public class Accounts {
 			session.heartbeat();
 		}
 		session.heartbeat();
+		
+		Cookie newToken = new Cookie("session_token", token);
+		newToken.setSecure(SECURE_COOKIES);
+		newToken.setPath("/");
+		newToken.setMaxAge((int) TimeUnit.HOURS.toSeconds(1));
+		res.addCookie(newToken);
 		return new Response(true);
 	}
 	
@@ -123,7 +131,7 @@ public class Accounts {
 		SessionService.removeSessionsByUser(session.userId);
 		UUID newSessionId = SessionService.newSession(session.userId, true);
 		Cookie newToken = new Cookie("session_token", newSessionId.toString());
-		newToken.setSecure(false);
+		newToken.setSecure(SECURE_COOKIES);
 		newToken.setPath("/");
 		newToken.setMaxAge((int) TimeUnit.HOURS.toSeconds(1));
 		res.addCookie(newToken);
