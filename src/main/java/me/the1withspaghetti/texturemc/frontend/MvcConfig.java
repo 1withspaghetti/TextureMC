@@ -22,10 +22,10 @@ public class MvcConfig implements WebMvcConfigurer {
     	String staticFilePath = "file:"+this.filePath+"static"+File.separator;
     	String assetFilePath = "file:"+this.filePath+"assets"+File.separator;
     	registry.addResourceHandler("/assets/**")
-			.addResourceLocations(staticFilePath)
+			.addResourceLocations(assetFilePath)
 			.setCachePeriod(1800);
         registry.addResourceHandler("/**")
-			.addResourceLocations(assetFilePath)
+			.addResourceLocations(staticFilePath)
 			.setCachePeriod(60);
         System.out.println("Serving static files from: "+staticFilePath);
         System.out.println("Serving asset files from: "+assetFilePath);

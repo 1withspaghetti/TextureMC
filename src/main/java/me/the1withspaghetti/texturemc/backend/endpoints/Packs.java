@@ -141,7 +141,7 @@ public class Packs {
 			String version = AccountDB.getPackVersion(pack, session.userId);
 			if (version == null) throw new ApiException("Unknown Pack");
 			
-			File file = new File(System.getProperty("user.dir")+("/static/assets/"+version+"/"+path+".json").replace('/', File.separatorChar));
+			File file = new File(System.getProperty("user.dir")+("/assets/"+version+"/"+path+".json").replace('/', File.separatorChar));
 			System.out.println(file.getPath());
 			if (!file.exists()) throw new ApiException("Unknown Item");
 			

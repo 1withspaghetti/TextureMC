@@ -41,7 +41,7 @@ import me.the1withspaghetti.texturemc.backend.util.UniqueIdGenerator;
 @CrossOrigin(origins = "*", methods= {RequestMethod.POST, RequestMethod.GET})
 public class Accounts {
 	
-	public static final boolean SECURE_COOKIES = false;
+	public static final boolean SECURE_COOKIES = true;
 	
 	UniqueIdGenerator uniqueIdGenerator = new UniqueIdGenerator();
 	SecureRandom rand = new SecureRandom();
