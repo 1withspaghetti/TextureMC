@@ -17,6 +17,7 @@ class Canvas {
     };
     tools: any = {
         pen: new PenTool(),
+        eraser: new EraserTool(),
         paintBucket: new PaintBucket(),
         line: new LineTool(),
         circle: new CircleTool(),

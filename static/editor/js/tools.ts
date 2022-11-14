@@ -36,6 +36,39 @@ class PenTool implements Tool {
     }
 }
 
+class EraserTool implements Tool {
+
+    lastPosition: {x: number, y: number} | undefined;
+
+    onMouseDown(e: MouseEvent, pos: {x: number, y: number}, canvas: Canvas) {
+        canvas.lockHistory();
+        this.lastPosition = pos;
+        
+        drawCircleFromPixels(canvas.toolPixels, canvas.main, tinycolor("#00000000"), pos.x, pos.y);
+        drawCircleFromPixels(canvas.toolPixels, canvas.highlight, null, pos.x, pos.y);
+    }
+
+    onMouseMove(e: MouseEvent, pos: {x: number, y: number}, canvas: Canvas) {
+        if (canvas.active) {
+            for(let pixel of canvas.toolPixels) {
+                if (this.lastPosition)
+                drawLine(canvas.main, tinycolor("#00000000"),
+                    this.lastPosition.x + pixel.x, this.lastPosition.y + pixel.y,
+                    pos.x + pixel.x, pos.y + pixel.y)
+            }
+            //drawCircleFromPixels(canvas.toolPixels, canvas.main, canvas.color, pos.x, pos.y);
+        }
+        drawCircleFromPixels(canvas.toolPixels, canvas.highlight, null, pos.x, pos.y);
+        
+        this.lastPosition = pos;
+    }
+
+    onMouseUp(e: MouseEvent, pos: {x: number, y: number}, canvas: Canvas) {
+        canvas.saveHistory();
+        this.lastPosition = undefined;
+    }
+}
+
 class PaintBucket implements Tool {
 
     onMouseDown(e: MouseEvent, pos: {x: number, y: number}, canvas: Canvas) {

@@ -24,6 +24,29 @@ class PenTool {
         this.lastPosition = undefined;
     }
 }
+class EraserTool {
+    onMouseDown(e, pos, canvas) {
+        canvas.lockHistory();
+        this.lastPosition = pos;
+        drawCircleFromPixels(canvas.toolPixels, canvas.main, tinycolor("#00000000"), pos.x, pos.y);
+        drawCircleFromPixels(canvas.toolPixels, canvas.highlight, null, pos.x, pos.y);
+    }
+    onMouseMove(e, pos, canvas) {
+        if (canvas.active) {
+            for (let pixel of canvas.toolPixels) {
+                if (this.lastPosition)
+                    drawLine(canvas.main, tinycolor("#00000000"), this.lastPosition.x + pixel.x, this.lastPosition.y + pixel.y, pos.x + pixel.x, pos.y + pixel.y);
+            }
+            //drawCircleFromPixels(canvas.toolPixels, canvas.main, canvas.color, pos.x, pos.y);
+        }
+        drawCircleFromPixels(canvas.toolPixels, canvas.highlight, null, pos.x, pos.y);
+        this.lastPosition = pos;
+    }
+    onMouseUp(e, pos, canvas) {
+        canvas.saveHistory();
+        this.lastPosition = undefined;
+    }
+}
 class PaintBucket {
     onMouseDown(e, pos, canvas) {
         canvas.lockHistory();

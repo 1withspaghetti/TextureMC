@@ -58,7 +58,7 @@
     transform: translateY(-50%);
     z-index: 1;
 
-    width: 75px;
+    width: 125px;
 
     padding: 10px 0;
 
@@ -69,7 +69,7 @@
 
 .pen-size {
     position: relative;
-    padding: 0px 5px;
+    padding: 0px 15px;
     text-align: center;
 }
 
@@ -80,20 +80,23 @@
 }
 
 .toollist {
-    flex-direction: column;
-    margin-top: 10px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 10px 3px 0px 3px
 }
 
 .tool {
-    width: 65px;
-    height: 65px;
+    width: 55px;
+    height: 55px;
     box-sizing: border-box;
     background-color: var(--item-bg-color);
     border: 3px solid var(--main-bg-color);
     padding: 10px;
-    margin: 5px;
+    margin: 2px;
     transition: all 100ms;
     cursor: pointer;
+    user-select: none;
 }
 
 .tool img {
@@ -279,7 +282,7 @@
 }
 
 folder {
-    padding-left: 20px;
+    padding-left: 10px;
     display: none;
 }
 

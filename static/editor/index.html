@@ -41,12 +41,13 @@
           <input type='text' id="color_selection"/>
         </div>
         <div class="toollist">
-          <div class="tool selected" data-tool="pen" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/pen.svg"></div>
-          <div class="tool" data-tool="paintBucket" data-cursor="/editor/imgs/paint_bucket_cursor.png"><img src="/editor/imgs/paint_bucket.svg"></div>
-          <div class="tool" data-tool="line" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/line_tool.svg"></div>
-          <div class="tool" data-tool="circle" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/circle_tool.svg"></div>
-          <div class="tool" data-tool="box" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/box_tool.svg"></div>
-          <div class="tool" data-tool="variation" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/variation_tool.svg"></div>
+          <div class="tool selected" data-tool="pen" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/pen.svg" draggable="false"></div>
+          <div class="tool" data-tool="eraser" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/pen.svg" draggable="false"></div>
+          <div class="tool" data-tool="line" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/line_tool.svg" draggable="false"></div>
+          <div class="tool" data-tool="paintBucket" data-cursor="/editor/imgs/paint_bucket_cursor.png"><img src="/editor/imgs/paint_bucket.svg" draggable="false"></div>
+          <div class="tool" data-tool="circle" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/circle_tool.svg" draggable="false"></div>
+          <div class="tool" data-tool="box" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/box_tool.svg" draggable="false"></div>
+          <div class="tool" data-tool="variation" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/variation_tool.svg" draggable="false"></div>
         </div>
         <label class="tool-setting" for="image_upload"><img src="/editor/imgs/upload.svg" width="32" height="32"></label>
         <input id="image_upload" type="file" accept="image/*" style="display:none;">
