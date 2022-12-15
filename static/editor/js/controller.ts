@@ -84,16 +84,19 @@
     $("#image_resize_ratio").on("click", e=>{
         $("#image_resize_ratio").toggleClass("checked");
     });
+    $("#image_resize_scale").on("click", e=>{
+        $("#image_resize_scale").toggleClass("checked");
+    });
     $("#image_resize_done").on("click", e=>{
         var width = parseInt($("#image_resize_width").val() as string);
         var height = parseInt($("#image_resize_height").val() as string);
         canvas.lockHistory();
-        canvas.setSize(Math.min(width,256), Math.min(height,256));
+        canvas.setSizeKeep(Math.min(width,256), Math.min(height,256), $("#image_resize_scale").hasClass("checked"));
         canvas.saveHistory();
     });
 })();
 (function() {
-    const MAX_PALETTE = 9;
+    const MAX_PALETTE = 10;
     var palette: string[] = [];
 
     $("#color_selection").spectrum({
@@ -118,7 +121,7 @@
             palette.unshift(c);
             if (palette.length > MAX_PALETTE) palette.pop();
             var newPalette = palette.map(c => [c]);
-            newPalette.unshift(["rgba(0,0,0,0)"])
+            //newPalette.unshift(["rgba(0,0,0,0)"])
             $("#color_selection").spectrum("option", "palette", newPalette);
         }
     });

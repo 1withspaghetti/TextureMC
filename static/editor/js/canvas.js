@@ -71,6 +71,22 @@ class Canvas {
             };
             this.updateTransform();
         };
+        this.setSizeKeep = (width, height, scale) => {
+            var old = document.createElement("img");
+            var oldWidth = this.width;
+            var oldHeight = this.height;
+            old.onload = () => {
+                this.setSize(width, height);
+                if (scale) {
+                    this.main.drawImage(old, 0, 0, this.width, this.height);
+                }
+                else {
+                    this.main.drawImage(old, 0, 0, oldWidth, oldHeight);
+                }
+                old.remove();
+            };
+            old.src = this.main.canvas.toDataURL("image/png");
+        };
         this.clearPreview = () => {
             this.preview.clearRect(0, 0, this.width, this.height);
             this.highlight.clearRect(0, 0, this.width, this.height);
@@ -149,6 +165,7 @@ class Canvas {
         this.preview = preview;
         this.main = main;
         main.getContextAttributes().willReadFrequently = true;
+        main.imageSmoothingEnabled = false;
         preview.fillStyle = "rgb(0, 0, 0)";
         main.fillStyle = "rgb(0, 0, 0)";
         highlight.fillStyle = "rgb(255, 255, 255)";

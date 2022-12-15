@@ -49,9 +49,11 @@
           <div class="tool" data-tool="box" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/box_tool.svg" draggable="false"></div>
           <div class="tool" data-tool="variation" data-cursor="/editor/imgs/pen_cursor.png"><img src="/editor/imgs/variation_tool.svg" draggable="false"></div>
         </div>
-        <label class="tool-setting" for="image_upload"><img src="/editor/imgs/upload.svg" width="32" height="32"></label>
-        <input id="image_upload" type="file" accept="image/*" style="display:none;">
-        <div class="tool-setting" id="image_resize"><img src="/editor/imgs/resize.svg" width="32" height="32"></div>
+        <div class="toollist">
+          <label class="tool-setting" for="image_upload"><img src="/editor/imgs/upload.svg" width="32" height="32"></label>
+          <input id="image_upload" type="file" accept="image/*" style="display:none;">
+          <div class="tool-setting" id="image_resize"><img src="/editor/imgs/resize.svg" width="32" height="32"></div>
+        </div>
       </div>
       <div id="camera" style="cursor: url('/editor/imgs/pen_cursor.png') 0 16, default;">
         <div id="pos_container">
@@ -87,6 +89,10 @@
         <div style="display: flex; align-items: center; justify-content: center;">
           <span type="checkbox" id="image_resize_ratio" class="checkbox checked"></span>
           <span> Keep 1:1 Aspect Ratio</span>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <span type="checkbox" id="image_resize_scale" class="checkbox checked"></span>
+          <span> Scale Drawing with Canvas</span>
         </div>
       </div>
       <div class="btn" data-modal-close>Close</div>
