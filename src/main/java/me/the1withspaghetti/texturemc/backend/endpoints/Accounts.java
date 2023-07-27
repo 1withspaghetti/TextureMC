@@ -50,16 +50,21 @@ public class Accounts {
 	public Response register(@Validated @RequestBody RegisterRequest req, HttpServletResponse res) throws Exception {
 		if (!req.password.equals(req.password2)) throw new ApiException("Passwords must match");
 		
+		if (AccountDB.emailExists(req.email)) throw new ApiException("Email is already in use");
+		
 		long id = uniqueIdGenerator.generateNewId();
 		String hash = Encryption.SHA_256(req.password);
 		
 		long verifyId = rand.nextLong();
-		MailService.sendConfirmationEmail(req.email, "https://texturemc.com/confirm-email/?confirmation="+verifyId);
+		//MailService.sendConfirmationEmail(req.email, "https://texturemc.com/confirm-email/?confirmation="+verifyId);
 		AccountDB.createVerificationRequest(verifyId, id, System.currentTimeMillis());
+		// SKIP SENDING EMAIL BECAUSE I DON"T WANT TO PAY FOR SENDGRID
+		AccountDB.confirmUser(verifyId, id);
 		
 		AccountDB.addUser(id, req.email, req.username, hash);
 		
-		UUID session = SessionService.newSession(id, false);
+		//UUID session = SessionService.newSession(id, false);
+		UUID session = SessionService.newSession(id, true);
 		Cookie token = new Cookie("session_token", session.toString());
 		token.setSecure(SECURE_COOKIES);
 		token.setPath("/");

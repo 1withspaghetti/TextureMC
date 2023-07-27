@@ -100,6 +100,14 @@ public class AccountDB {
 		return (ps.executeUpdate() > 0);
 	}
 	
+	public static boolean emailExists(String email) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("SELECT email FROM accounts WHERE email = ?;");
+		ps.setString(1, email);
+		ResultSet rs = ps.executeQuery();
+		if (!rs.next()) return false;
+		else return true;
+	}
+	
 	public static void createVerificationRequest(long id, long userId, long sent) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("INSERT INTO verification (id, userId, sent) VALUES(?,?,?);");
 		ps.setLong(1, id);
