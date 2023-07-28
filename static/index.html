@@ -20,7 +20,7 @@
 </head>
 <body>
   <div class="topnav" th:fragment="navbar">
-    <a class="logo" href="/">TextureMC<span class="beta">BETA</span></a>
+    <a class="logo" href="/">TextureMC</a>
     <a href="/about/">About</a>
     <a href="/login/" class="right" th:unless="${hasSession}">Log In</a>
     <a href="/signup/" class="right" th:unless="${hasSession}">Sign Up</a>
@@ -35,11 +35,6 @@
            ease. All you need to do is, create an pack, select a version, and start drawing!<br>
          <a href="/signup"><button class="button-primary">Get Started</button></a>
        </div>
-    </div>
-    <div class="panel">
-      <div class="panel-text beta-notice">
-        <span><b>Please note:</b> This website is in <i>BETA</i>, <a href="/about">Click Here</a> to see more!</span>
-      </div>
     </div>
     <div class="panel">
       <div class="panel-text">
