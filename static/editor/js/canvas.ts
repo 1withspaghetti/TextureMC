@@ -22,7 +22,8 @@ class Canvas {
         line: new LineTool(),
         circle: new CircleTool(),
         box: new BoxTool(),
-        variation: new VariationTool()
+        variation: new VariationTool(),
+        eyedropper: new EyedropperTool(),
     }
 
     color: tinycolor.Instance = new tinycolor("#000000");

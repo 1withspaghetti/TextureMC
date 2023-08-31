@@ -1,4 +1,15 @@
 "use strict";
+class EyedropperTool {
+    onMouseDown(e, pos, canvas) {
+        var pixel = canvas.main.getImageData(pos.x, pos.y, 1, 1).data;
+        var color = tinycolor({ r: pixel[0], g: pixel[1], b: pixel[2], a: pixel[3] / 255 });
+        $(document).trigger("color.change", color);
+        $(document).trigger("color.paletteAdd", color);
+        $("#color_selection").spectrum("set", color.toHexString());
+    }
+    onMouseMove(e, pos, canvas) { }
+    onMouseUp(e, pos, canvas) { }
+}
 class PenTool {
     onMouseDown(e, pos, canvas) {
         canvas.lockHistory();

@@ -5,6 +5,22 @@ interface Tool {
     onMouseUp(e: MouseEvent, pos: {x: Number, y: Number}, canvas: Canvas): void;
 }
 
+class EyedropperTool implements Tool {
+
+    onMouseDown(e: MouseEvent, pos: { x: number; y: number; }, canvas: Canvas): void {
+        var pixel = canvas.main.getImageData(pos.x, pos.y, 1, 1).data;
+        var color = tinycolor({r: pixel[0], g: pixel[1], b: pixel[2], a: pixel[3] / 255})
+        $(document).trigger("color.change", color);
+        $(document).trigger("color.paletteAdd", color);
+        $("#color_selection").spectrum("set", color.toHexString());
+    }
+
+    onMouseMove(e: MouseEvent, pos: { x: number; y: number; }, canvas: Canvas): void {}
+
+    onMouseUp(e: MouseEvent, pos: { x: number; y: number; }, canvas: Canvas): void {}
+
+}
+
 class PenTool implements Tool {
 
     lastPosition: {x: number, y: number} | undefined;

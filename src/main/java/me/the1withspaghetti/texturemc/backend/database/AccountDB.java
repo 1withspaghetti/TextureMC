@@ -49,6 +49,7 @@ public class AccountDB {
 	public static void purgeOldData() throws SQLException {
 		PreparedStatement ps = con.prepareStatement("DELETE FROM verification WHERE sent < ?;");
 		ps.setLong(1, System.currentTimeMillis() - TimeUnit.DAYS.convert(1, TimeUnit.MILLISECONDS));
+		ps.execute();
 	}
 	
 	public static void addUser(long id, String email, String username, String hash) throws SQLException {

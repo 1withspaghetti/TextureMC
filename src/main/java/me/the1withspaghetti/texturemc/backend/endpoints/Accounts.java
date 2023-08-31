@@ -59,9 +59,8 @@ public class Accounts {
 		//MailService.sendConfirmationEmail(req.email, "https://texturemc.com/confirm-email/?confirmation="+verifyId);
 		AccountDB.createVerificationRequest(verifyId, id, System.currentTimeMillis());
 		// SKIP SENDING EMAIL BECAUSE I DON"T WANT TO PAY FOR SENDGRID
-		AccountDB.confirmUser(verifyId, id);
-		
 		AccountDB.addUser(id, req.email, req.username, hash);
+		AccountDB.confirmUser(verifyId, id);
 		
 		//UUID session = SessionService.newSession(id, false);
 		UUID session = SessionService.newSession(id, true);
@@ -80,7 +79,8 @@ public class Accounts {
 		User user = AccountDB.getUser(req.email, hash);
 		if (user == null) throw new ApiException("Invalid email or password.");
 		
-		UUID session = SessionService.newSession(user.id, user.verified);
+		//UUID session = SessionService.newSession(user.id, user.verified);
+		UUID session = SessionService.newSession(user.id, true);
 		Cookie token = new Cookie("session_token", session.toString());
 		token.setSecure(SECURE_COOKIES);
 		token.setPath("/");

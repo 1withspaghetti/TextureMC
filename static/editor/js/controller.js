@@ -105,7 +105,7 @@
     });
 })();
 (function () {
-    const MAX_PALETTE = 10;
+    const MAX_PALETTE = 21;
     var palette = [];
     $("#color_selection").spectrum({
         color: "#000000",
@@ -120,18 +120,24 @@
         replacerClassName: 'sp-override',
         palette: [
             ['rgba(0,0,0,0)']
-        ]
+        ],
     }).on("move.spectrum change.spectrum", (e, color) => {
         $(document).trigger("color.change", color);
     }).on("change.spectrum", (e, color) => {
+        $(document).trigger("color.paletteAdd", color);
+    });
+    $(document).on("color.paletteAdd", (e, color) => {
         var c = color.toHexString();
-        if (!palette.includes(c)) {
-            palette.unshift(c);
-            if (palette.length > MAX_PALETTE)
-                palette.pop();
-            var newPalette = palette.map(c => [c]);
-            //newPalette.unshift(["rgba(0,0,0,0)"])
-            $("#color_selection").spectrum("option", "palette", newPalette);
+        if (palette.includes(c))
+            palette.splice(palette.indexOf(c), 1);
+        palette.unshift(c);
+        if (palette.length > MAX_PALETTE)
+            palette.splice(MAX_PALETTE);
+        var newPalette = [];
+        for (var i = 0; i < palette.length; i += 3) {
+            newPalette.push(palette.slice(i, i + 3));
         }
+        newPalette.unshift(["rgba(0,0,0,0)"]);
+        $("#color_selection").spectrum("option", "palette", newPalette);
     });
 })();

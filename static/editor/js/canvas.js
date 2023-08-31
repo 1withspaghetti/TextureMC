@@ -20,7 +20,8 @@ class Canvas {
             line: new LineTool(),
             circle: new CircleTool(),
             box: new BoxTool(),
-            variation: new VariationTool()
+            variation: new VariationTool(),
+            eyedropper: new EyedropperTool(),
         };
         this.color = new tinycolor("#000000");
         this.isTransparent = false;
