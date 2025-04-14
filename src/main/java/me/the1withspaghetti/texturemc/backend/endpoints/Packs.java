@@ -68,14 +68,17 @@ public class Packs {
 		SessionData session = SessionService.getSession(token);
 		if (session == null) throw new ApiException("Invalid Session");
 		
-		if (!VersionControl.isVersion(req.version)) throw new ApiException("Invalid Version");
+		// END OF LIFE
+		throw new ApiException("This operation is not availible");
 		
-		long id = rand.nextLong();
-		
-		AccountDB.addPack(id, session.userId, req.name, req.version);
-		PackDB.createPack(id, session.userId);
-		
-		return new Response(true);
+//		if (!VersionControl.isVersion(req.version)) throw new ApiException("Invalid Version");
+//		
+//		long id = rand.nextLong();
+//		
+//		AccountDB.addPack(id, session.userId, req.name, req.version);
+//		PackDB.createPack(id, session.userId);
+//		
+//		return new Response(true);
 	}
 	
 	@PostMapping("/rename")
@@ -93,12 +96,15 @@ public class Packs {
 		SessionData session = SessionService.getSession(token);
 		if (session == null) throw new ApiException("Invalid Session");
 		
-		long newId = rand.nextLong();
+		// END OF LIFE
+		throw new ApiException("This operation is not availible");
 		
-		if (!AccountDB.duplicatePack(req.id, session.userId, newId)) throw new ApiException("Unknown Pack", HttpStatus.NOT_FOUND);
-		PackDB.duplicatePack(req.id, session.userId, newId);
-		
-		return new Response(true);
+//		long newId = rand.nextLong();
+//		
+//		if (!AccountDB.duplicatePack(req.id, session.userId, newId)) throw new ApiException("Unknown Pack", HttpStatus.NOT_FOUND);
+//		PackDB.duplicatePack(req.id, session.userId, newId);
+//		
+//		return new Response(true);
 	}
 	
 	@PostMapping("/delete")
@@ -118,15 +124,18 @@ public class Packs {
 		SessionData session = SessionService.getSession(token);
 		if (session == null) throw new ApiException("Invalid Session");
 		
-		System.out.println("POST path: "+path+" pack: "+pack+" userId: "+session.userId);
+		// END OF LIFE
+		throw new ApiException("This operation is not availible");
 		
-		String version = AccountDB.getPackVersion(pack, session.userId);
-		if (version == null) throw new ApiException("Unknown Pack");
-		if (!VersionControl.isItem(version, path)) throw new ApiException("Unknown item");
-		
-		PackDB.insertItem(pack, session.userId, path, req);
-		
-		return new Response(true);
+//		System.out.println("POST path: "+path+" pack: "+pack+" userId: "+session.userId);
+//		
+//		String version = AccountDB.getPackVersion(pack, session.userId);
+//		if (version == null) throw new ApiException("Unknown Pack");
+//		if (!VersionControl.isItem(version, path)) throw new ApiException("Unknown item");
+//		
+//		PackDB.insertItem(pack, session.userId, path, req);
+//		
+//		return new Response(true);
 	}
 	
 	@GetMapping("/data/{id}/get")
@@ -175,24 +184,27 @@ public class Packs {
 		SessionData session = SessionService.getSession(token);
 		if (session == null) throw new ApiException("Invalid Session");
 		
-		String version = VersionControl.getVersion(req.format);
-		if (version == null) throw new ApiException("Invalid Version");
+		// END OF LIFE
+		throw new ApiException("This operation is not availible");
 		
-		if (req.data.isEmpty()) throw new ApiException("You cannot import an empty pack!");
-		
-		Iterator<Entry<String, Texture>> it = req.data.entrySet().iterator();
-		while (it.hasNext()) {
-			if (!VersionControl.isItem(version, it.next().getKey())) it.remove();
-		}
-		
-		if (req.data.isEmpty()) throw new ApiException("Pack contains invalid items");
-		
-		long id = rand.nextLong();
-		AccountDB.addPack(id, session.userId, req.name, version);
-		PackDB.createPack(id, session.userId);
-		PackDB.insertItems(id, session.userId, req.data);
-		
-		return new Response(true);
+//		String version = VersionControl.getVersion(req.format);
+//		if (version == null) throw new ApiException("Invalid Version");
+//		
+//		if (req.data.isEmpty()) throw new ApiException("You cannot import an empty pack!");
+//		
+//		Iterator<Entry<String, Texture>> it = req.data.entrySet().iterator();
+//		while (it.hasNext()) {
+//			if (!VersionControl.isItem(version, it.next().getKey())) it.remove();
+//		}
+//		
+//		if (req.data.isEmpty()) throw new ApiException("Pack contains invalid items");
+//		
+//		long id = rand.nextLong();
+//		AccountDB.addPack(id, session.userId, req.name, version);
+//		PackDB.createPack(id, session.userId);
+//		PackDB.insertItems(id, session.userId, req.data);
+//		
+//		return new Response(true);
 	}
 	
 }

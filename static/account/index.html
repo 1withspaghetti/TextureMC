@@ -5,6 +5,7 @@
   <div th:replace="/index.html :: header"></div>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
   <link rel="stylesheet" type="text/css" href="/account/style.css">
+  <link rel="stylesheet" type="text/css" href="/about/style.css">
   <script type="text/javascript" src="/lib/jszip.min.js"></script>
   <script type="text/javascript" src="/lib/FileSaver.min.js"></script>
   <script type="text/javascript" src="/editor/js/fileIO.js"></script>
@@ -38,19 +39,22 @@
       </div>
       <div id="packs-empty" th:style="${#lists.isEmpty(packs) ? 'display:block' : 'display:none'}">You don't have any packs yet<br>Click the button below to get started!</div><br>
       <div th:style="${!isMax ? 'display:block' : 'display:none'}">
-        <label class="importpack green" open-modal="new-pack">&#10133; New Texture Pack</label>
+        <!-- <label class="importpack green" open-modal="new-pack">&#10133; New Texture Pack</label>
         <label for="import_pack" class="importpack"><i class="fa fa-file"></i> Import from File</label>
-        <input type="file" class="hidden" id="import_pack" accept=".zip">
+        <input type="file" class="hidden" id="import_pack" accept=".zip"> -->
       </div>
     </div>
+  </div>
+  <div class="content">
+    <div th:replace="/index.html :: eol"></div>
   </div>
   <div class="pack-context" id="pack_context_menu" style="display: none;">
     <a class="pack-context-item" open-modal="rename-pack"><i class="fa fa-pencil"></i>Rename</a>
     <a class="pack-context-item" id="export_pack"><i class="fa fa-download"></i>Download</a>
-    <a class="pack-context-item" open-modal="duplicate-pack"><i class="fa fa-copy"></i>Duplicate</a>
+    <!-- <a class="pack-context-item" open-modal="duplicate-pack"><i class="fa fa-copy"></i>Duplicate</a> -->
     <a class="pack-context-item red" open-modal="delete-pack"><i class="fa fa-trash"></i>Delete</a>
   </div>
-  <div class="modal-bg" id="modal-bg">
+  <!-- <div class="modal-bg" id="modal-bg">
     <form class="modal refresh-packs-on-complete" modal="new-pack" action="/packs/create">
       <h2>Create a new Texture Pack</h2>
 	    <p>Give your new pack a name and select a minecraft version!</p>
@@ -78,9 +82,9 @@
       <div class="notification" messages></div>
       <div class="btn" modal-close>Cancel</div>
       <input type="submit" class="btn primary" value="Create New Pack">
-    </form>
+    </form> -->
 
-    <div class="modal" modal="import-pack">
+    <!-- <div class="modal" modal="import-pack">
       <h2>Import Texture Pack</h2>
 	    <p>Please select a texture pack file to import</p>
       <div class="fileinfo">
@@ -91,7 +95,7 @@
       <div class="notification" id="importPackNotification"></div>
       <div class="btn" modal-close>Cancel</div>
       <div class="btn primary">Import Pack</div>
-    </div>
+    </div> -->
 
     <form class="modal refresh-packs-on-complete" modal="rename-pack" action="/packs/rename">
       <input type="hidden" name="id">

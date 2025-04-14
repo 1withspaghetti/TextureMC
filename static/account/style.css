@@ -76,7 +76,7 @@ body {
     margin: 10px;
     font-size: 1rem;
     font-weight: 500;
-    cursor: pointer;
+    /* cursor: pointer; */
     width: 18rem;
 }
 

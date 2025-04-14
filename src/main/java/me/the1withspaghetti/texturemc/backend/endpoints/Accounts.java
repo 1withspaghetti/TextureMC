@@ -47,28 +47,33 @@ public class Accounts {
 	
 	@PostMapping("/register")
 	public Response register(@Validated @RequestBody RegisterRequest req, HttpServletResponse res) throws Exception {
-		if (!req.password.equals(req.password2)) throw new ApiException("Passwords must match");
 		
-		if (AccountDB.emailExists(req.email)) throw new ApiException("Email is already in use");
-		
-		long id = uniqueIdGenerator.generateNewId();
-		String hash = Encryption.SHA_256(req.password);
-		
-		long verifyId = rand.nextLong();
-		//MailService.sendConfirmationEmail(req.email, "https://texturemc.com/confirm-email/?confirmation="+verifyId);
-		AccountDB.createVerificationRequest(verifyId, id, System.currentTimeMillis());
-		// SKIP SENDING EMAIL BECAUSE I DON"T WANT TO PAY FOR SENDGRID
-		AccountDB.addUser(id, req.email, req.username, hash);
-		AccountDB.confirmUser(verifyId, id);
-		
-		//UUID session = SessionService.newSession(id, false);
-		UUID session = SessionService.newSession(id, true);
-		Cookie token = new Cookie("session_token", session.toString());
-		token.setSecure(SECURE_COOKIES);
-		token.setPath("/");
-		token.setMaxAge((int) TimeUnit.HOURS.toSeconds(1));
-		res.addCookie(token);
-		return new Response(true);
+		// END OF LIFE
+		throw new ApiException("This operation is not availible");
+				
+				
+//		if (!req.password.equals(req.password2)) throw new ApiException("Passwords must match");
+//		
+//		if (AccountDB.emailExists(req.email)) throw new ApiException("Email is already in use");
+//		
+//		long id = uniqueIdGenerator.generateNewId();
+//		String hash = Encryption.SHA_256(req.password);
+//		
+//		long verifyId = rand.nextLong();
+//		//MailService.sendConfirmationEmail(req.email, "https://texturemc.com/confirm-email/?confirmation="+verifyId);
+//		AccountDB.createVerificationRequest(verifyId, id, System.currentTimeMillis());
+//		// SKIP SENDING EMAIL BECAUSE I DON"T WANT TO PAY FOR SENDGRID
+//		AccountDB.addUser(id, req.email, req.username, hash);
+//		AccountDB.confirmUser(verifyId, id);
+//		
+//		//UUID session = SessionService.newSession(id, false);
+//		UUID session = SessionService.newSession(id, true);
+//		Cookie token = new Cookie("session_token", session.toString());
+//		token.setSecure(SECURE_COOKIES);
+//		token.setPath("/");
+//		token.setMaxAge((int) TimeUnit.HOURS.toSeconds(1));
+//		res.addCookie(token);
+//		return new Response(true);
 	}
 	
 	@PostMapping("/login")

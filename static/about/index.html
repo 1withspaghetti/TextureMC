@@ -22,13 +22,7 @@
     <a href="/account" class="right" th:if="${hasSession}">Account</a>
   </div>
   <div class="content">
-    <div class="panel">
-      <div class="panel-text beta-notice" id="beta">
-        <span>
-          TextureMC has been abandoned. The website will remain online for the time being, but no new features will be added. However, feel free to <a href="https://1withspaghetti.com/">contact me</a> if you have any questions or concerns.
-        </span>
-      </div>
-    </div>
+    <div th:replace="/index.html :: eol"></div>
     <div class="panel">
       <div class="panel-text text-container" id="terms">
         <div class="text-centered">

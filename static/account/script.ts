@@ -55,7 +55,7 @@ function refreshPacks() {
 
 function addPackEventListeners() {
     $(".pack").on("click", e=>{
-        if (!$(e.target).hasClass("pack-settings")) location.href = `/editor/${e.currentTarget.getAttribute("data-pack")}/`
+        //if (!$(e.target).hasClass("pack-settings")) location.href = `/editor/${e.currentTarget.getAttribute("data-pack")}/`
     })
     $(".pack-settings").on("click", e => {
         let c = $(e.currentTarget);

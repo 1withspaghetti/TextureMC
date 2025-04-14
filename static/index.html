@@ -16,7 +16,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,800;0,900;1,100;1,200;1,300;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </th:block>
-  <link rel="stylesheet" type="text/css" href="/css/style.css">
+  <link rel="stylesheet" type="text/css" href="/about/style.css">
 </head>
 <body>
   <div class="topnav" th:fragment="navbar">
@@ -27,6 +27,31 @@
     <a href="/account/" class="right" th:if="${hasSession}">Account</a>
   </div>
   <div class="content">
+    <th:block th:fragment="eol">
+      <div class="panel">
+        <div class="panel-text beta-notice" id="EOL">
+          <h2>
+            TextureMC has reached the end of its life
+          </h2>
+          <p>
+            <i>The pack editor & signup have been disabled, but feel free to still download your packs and edit them using different services or <a href="https://minecraft.wiki/w/Tutorial:Creating_a_resource_pack">try it yourself</a> (I highly recommend using <a href="https://www.blockbench.net/">blockbench</a> for its pixel art editor)</i>
+          </p>
+          <p>
+            I am a solo developer and to be honest, I don't have any motivation to keep working on this project, and not much time either.
+            The server computing power (and especially server space) is too expensive for me to keep running, especially as a high school student going off to college in the coming months.
+            Minecraft used to be so special to be, but now I don't play it anymore and I've moved to other games and larger projects.
+          </p>
+          <p>
+            Although I could hand this off to another developer to work on it, I don't think it would be worth it. The codebase is terrible because I made this so long ago, as one of my first projects, and I don't trust anybody else with y'alls data. (I will make sure to delete all of it before shutting down the server)
+          </p>
+          <p>
+            <b>
+              I will be shutting down the server and deleting everything on July 31st, 2025, so please make sure to download your packs before then.
+            </b>
+          </p>
+        </div>
+      </div>
+    </th:block>
     <div class="panel">
       <img src="images/editor.png" class="panel-display shadow">
       <div class="panel-text">
