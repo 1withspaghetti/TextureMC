@@ -29,7 +29,6 @@ import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.LoginRequest
 import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.RegisterRequest;
 import me.the1withspaghetti.texturemc.backend.endpoints.serverbound.RenameUserRequest;
 import me.the1withspaghetti.texturemc.backend.exception.ApiException;
-import me.the1withspaghetti.texturemc.backend.service.MailService;
 import me.the1withspaghetti.texturemc.backend.service.SessionService;
 import me.the1withspaghetti.texturemc.backend.service.SessionService.SessionData;
 import me.the1withspaghetti.texturemc.backend.util.Encryption;

@@ -23,13 +23,13 @@ public class TreeGenerator {
 	
 public static Gson gson = new Gson();
 	
-	public static final String VERSION = "1.19.1";
+	public static final String VERSION = "1.21.3";
 	public static final List<String> ignoreFolders = Arrays.asList("font","presets","background");
 	
-	static final String folderLoc = "C:\\Users\\tyler\\OneDrive\\Documents\\Minecraft Assets\\texture_folder_only\\"+VERSION+"\\";
-	static final String imgOutput = "C:\\Users\\tyler\\OneDrive\\Documents\\Websites\\TextureMC 2\\static\\assets\\"+VERSION+"\\";
-	static final String treeOutput1 = "C:\\Users\\tyler\\OneDrive\\Documents\\Websites\\TextureMC 2\\static\\assets\\"+VERSION+".json";
-	static final String treeOutput2 = "C:\\Users\\tyler\\OneDrive\\Documents\\Websites\\TextureMC 2\\src\\main\\resources\\assets\\"+VERSION+".json";
+	static final String folderLoc = "C:\\Users\\tyler\\Downloads\\Minecraft Assets\\texture_folder_only\\"+VERSION+"\\";
+	static final String imgOutput = "C:\\Users\\tyler\\OneDrive\\Documents\\Websites\\standalone\\TextureMC 2\\assets\\"+VERSION+"\\";
+	static final String treeOutput1 = "C:\\Users\\tyler\\OneDrive\\Documents\\Websites\\standalone\\TextureMC 2\\assets\\"+VERSION+".json";
+	static final String treeOutput2 = "C:\\Users\\tyler\\OneDrive\\Documents\\Websites\\standalone\\TextureMC 2\\src\\main\\resources\\assets\\"+VERSION+".json";
 	
 	public static void main(String[] args) throws IOException {
 		

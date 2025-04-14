@@ -27,7 +27,10 @@ public class VersionControl {
 			"1.17.1","7",
 			"1.18.2","8",
 			"1.19.1","9",
-			"1.19.2","9"
+			"1.19.2","9",
+			"1.19.4","13",
+			"1.20.6","32",
+			"1.21.3","42",
 	};
 	
 	public static void init() throws IOException {
